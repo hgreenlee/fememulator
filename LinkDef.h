@@ -9,10 +9,11 @@
 #pragma link off all classes;
 #pragma link off all functions;
 
-#pragma link C++ namespace fememu;
-#pragma link C++ function fememu::basicTrigger;
-#pragma link C++ class fememu::TriggerOutput+;
-#pragma link C++ class fememu::WaveformStore+;
-#pragma link C++ class fememu::BasicTriggerConfig+;
+#pragma link C++ namespace fememu+;
+#pragma link C++ class fememu::FEMBeamTriggerConfig+;
+#pragma link C++ class fememu::FEMBeamTriggerOutput+;
+#pragma link C++ class fememu::FEMBeamTriggerAlgo+;
+#pragma link C++ class fememu::LLInterface+;
+
 #endif
 

@@ -11,12 +11,11 @@ HEADERS = $(filter-out $(FMWK_HEADERS), $(wildcard *.h))
 OBJECTS = $(SOURCES:.cxx=.o)
 
 # include options for this package
-INCFLAGS  = -I.                       #Include itself
+INCFLAGS  = -I.  #Include itself
 INCFLAGS += $(shell larlite-config --includes)
-INCFLAGS += -I$(shell pg_config --includedir)
-INCFLAGS += -I${BOOST_INC}
-INCFLAGS += -I$(LARLITE_USERDEVDIR)
-INCFLAGS += $(shell python-config --includes)
+#INCFLAGS += -I$(shell pg_config --includedir)
+#INCFLAGS += -I${BOOST_INC}
+#INCFLAGS += $(shell python-config --includes)
 #INCFLAGS += -I$(shell python -c "import numpy; print numpy.get_include()")
 
 # platform-specific options
@@ -26,8 +25,8 @@ OSNAMEMODE      = $(OSNAME)
 
 CXXFLAGS += -g
 LDFLAGS += $(shell larlite-config --libs) 
-LDFLAGS += -L$(shell pg_config --libdir) -lpq
-LDFLAGS += -L${BOOST_LIB} -lboost_serialization
+#LDFLAGS += -L$(shell pg_config --libdir) -lpq
+#LDFLAGS += -L${BOOST_LIB} -lboost_serialization
 
 CINTFLAGS += "-p"
 # call kernel specific compiler setup
