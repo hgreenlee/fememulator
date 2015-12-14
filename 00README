@@ -1,0 +1,5 @@
+if using LARLITE. Copy larlite_GNUMakefile to GNUMakefile.
+
+if using LARSOFT. Copy larsoft_CMakelist.txt to CMakelist.txt
+
+otherwise use default GNUMakelist (or copy default_GNUMakelist)
