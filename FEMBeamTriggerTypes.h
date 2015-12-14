@@ -3,6 +3,8 @@
 
 #include <vector>
 #include <string>
+#include <exception>
+
 namespace fememu {
 
   typedef std::vector<short> Waveform_t;
@@ -13,6 +15,10 @@ namespace fememu {
    */
   struct FEMBeamTriggerConfig {
   public:
+
+    bool fVerbose;
+    bool fSetTriggerWindow;
+
     short fDiscr0delay; ///< Delay to form a diff vector
     short fDiscr3delay; ///< Delay to form a diff vector
     
@@ -27,9 +33,10 @@ namespace fememu {
     short fDiscr0width; ///< Width for disc. 0... WHAT IS THIS?
     short fDiscr3width; ///< Width for disc. 3
 
-    short fMinReadoutTicks; ///< Comment please!
-    short fFrontBuffer;     ///< Comment please!
-    short fWindowSize;      ///< Comment please!
+    short fTriggerWinStartTick; ///< tick where trigger window starts (only relevant if fSetTriggerWindow)
+    short fMinReadoutTicks; ///< Ignore waveform if has ticks less than this number. Used to separate cosmic windows and beam windows
+    short fFrontBuffer;     ///< Number of ticks to skip in front of waveform
+    short fWindowSize;      ///< Size of PMT Trigger Window in ticks
 
     /// Default ctor
     FEMBeamTriggerConfig()
@@ -47,9 +54,12 @@ namespace fememu {
       fDiscr0width = 6;
       fDiscr3width = 6;
 
-      fMinReadoutTicks = 0;
+      fMinReadoutTicks = 500;
       fFrontBuffer = 20;
-      fWindowSize = 6;
+      fWindowSize = 103;
+      fVerbose = false;
+      fSetTriggerWindow = false;
+      fTriggerWinStartTick = 300;
     }
     
   };
@@ -61,8 +71,8 @@ namespace fememu {
     
     /// Default ctor
     FEMBeamTriggerOutput(const size_t wf_size=1500)
-      : vmaxdiff ( 1500, 0 )
-      , vmaxhit  ( 1500, 0 )
+      : vmaxdiff ( wf_size, 0 )
+      , vmaxhit  ( wf_size, 0 )
     {}
 
     /// Default dtor
