@@ -133,11 +133,18 @@ namespace fememu {
 
       for(auto& v: diff0) v = 0;
       for(auto& v: diff3) v = 0;
-      
+
+      /*
       for (short tick=_cfg.fDiscr0delay; tick<(short)wfm.size(); tick++)
 	diff0[tick] = wfm[tick]-wfm[tick-_cfg.fDiscr0delay];
       for (short tick=_cfg.fDiscr3delay; tick<(short)wfm.size(); tick++)
 	diff3[tick] = wfm[tick]-wfm[tick-_cfg.fDiscr3delay];
+      */
+
+      for (short tick=0; (tick + _cfg.fDiscr0delay)<(short)wfm.size(); tick++)
+	diff0[tick] = wfm[tick+_cfg.fDiscr0delay] - wfm[tick];
+      for (short tick=0; (tick + _cfg.fDiscr3delay)<(short)wfm.size(); tick++)
+	diff3[tick] = wfm[tick+_cfg.fDiscr3delay] - wfm[tick];
 
       if(debug()) std::cout << "[fememu::emulate] filled diffs for "  << ch << std::endl;
 
@@ -159,8 +166,8 @@ namespace fememu {
 	// discr3 fire
 	if ( diff3[tick]>=_cfg.fDiscr3threshold ) {
 	  // must be within discr0 prewindow and outside of past discr3 deadtime and inside beam spill window(s)
-	  if ( ( ttrig0.size() >  0 && tick < _cfg.fDiscr0deadtime + ttrig0.back() ) &&
-	       ( ttrig3.size() == 0 || ttrig3.back() + _cfg.fDiscr3deadtime < tick ) &&
+	  if ( ( !ttrig0.empty() && tick < _cfg.fDiscr0deadtime + ttrig0.back() ) &&
+	       (  ttrig3.empty() || ttrig3.back() + _cfg.fDiscr3deadtime < tick ) &&
 	       ( tick >= disc3_min_tick && tick <= disc3_max_tick )
 	       ) {
 	    ttrig3.push_back( tick );

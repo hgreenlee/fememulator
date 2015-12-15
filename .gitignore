@@ -3,3 +3,6 @@
 *.o
 FEMemulator_dict.*
 *.pyc
+*.root
+*.dat
+*.ipynb_checkpoints
