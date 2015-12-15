@@ -32,7 +32,8 @@ config.fTriggerThresMult = 1
 config.fTriggerThresPHMAX = 1000
 
 fememu = rt.fememu.LLInterface(config)
-fememu._verbosity=rt.fememu.kDEBUG
+#fememu._verbosity=rt.fememu.kDEBUG
+fememu._verbosity=rt.fememu.kINFO
 product = None
 while bytes>0:
 

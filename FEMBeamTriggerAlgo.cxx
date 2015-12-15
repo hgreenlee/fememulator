@@ -72,7 +72,7 @@ namespace fememu {
       for (short tick=_cfg.fDiscr3delay; tick<(short)wfm.size(); tick++)
 	_diff3.at(tick) = wfm.at(tick)-wfm.at(tick-_cfg.fDiscr3delay);
 
-      if(info()) std::cout << "filled diffs for "  << ch << std::endl;
+      if(debug()) std::cout << "[fememu::emulate] filled diffs for "  << ch << std::endl;
 
       // determine triggers and fill accumulators
       std::vector<short> ttrig0;
@@ -112,8 +112,8 @@ namespace fememu {
 	  }
 	}
       }//end of wfm loop for trigger and accumulators
-      if(info())
-	std::cout << "[fememu::emulate] found trig " << ttrig3.size() << " fires for "  << ch << std::endl;
+      if(info() && !ttrig3.empty())
+	std::cout << "[fememu::emulate] found disc3 " << ttrig3.size() << " fires for "  << ch << std::endl;
     }//end of channel loop
 
 
@@ -169,9 +169,16 @@ namespace fememu {
 	if ( winmaxmulti < nhit_ )
 	  winmaxmulti = nhit_;
 	if(fire_time < 0 &&
-	   winmaxdiff > _cfg.fTriggerThresPHMAX &&
-	   winmaxmulti > _cfg.fTriggerThresMult)
+	   maxdiff_  >= _cfg.fTriggerThresPHMAX &&
+	   nhit_     >= _cfg.fTriggerThresMult)
 	  fire_time = tick;
+
+	if(debug()) std::cout << "    "
+			      << "@ tick "   << tick     << "  "
+			      << "@ window " << iwin     << "  "
+			      << "mult = "   << nhit_    << "  "
+			      << "phmax = "  << maxdiff_ << "  "
+			      << std::endl;
       }
 
       // store results
