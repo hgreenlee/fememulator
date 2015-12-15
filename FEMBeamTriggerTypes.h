@@ -80,7 +80,7 @@ namespace fememu {
       fTriggerThresMult  = 4;
       fTriggerThresPHMAX = 80;
     }
-    
+
   };
 
   /// Trigger decision result holder

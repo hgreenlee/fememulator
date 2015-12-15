@@ -6,7 +6,6 @@ def apply_config(cfg_obj,cfg_file):
         return False
 
     contents = open(cfg_file,'r').read().split('\n')
-    tmp_cfg=fememu.FEMBeamTriggerConfig()
     for line_num in xrange(len(contents)):
 
         line = contents[line_num]
@@ -26,11 +25,11 @@ def apply_config(cfg_obj,cfg_file):
         val_name = words[1].strip(' ')
 
         try:
-            exec('tmp_cfg.%s = %s' % (var_name,val_name))
+            exec('cfg_obj.%s' % var_name) # this line checks if an attrivute exists w/ valid name
+            exec('cfg_obj.%s = %s' % (var_name,val_name))
         except Exception:
             print '\033[95m[ERROR]\033[00m could not apply following line for configuration (skipping)'
             print '    Line %d: %s' % (line_num,line)
             return False
 
-    cfg_obj = tmp_cfg
     return True

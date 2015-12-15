@@ -98,7 +98,7 @@ namespace fememu {
 	      if ( tmaxdiff<_diff3.at(t) )
 	    	tmaxdiff = _diff3.at(t);
 	    }
-	    if(info())
+	    if(debug())
 	      std::cout << "[fememu::emulate] discr 3 fire: " << tmaxdiff << " " << _diff3.at(tick) << std::endl;
 	    // fill the accumulators
 	    short tend = std::min( (short)(tick+_cfg.fDiscr3deadtime), (short)_diff3.size() );
@@ -109,7 +109,7 @@ namespace fememu {
 	  }
 	}
       }//end of wfm loop for trigger and accumulators
-      if(info() && !ttrig3.empty())
+      if(debug() && !ttrig3.empty())
 	std::cout << "[fememu::emulate] found disc3 " << ttrig3.size() << " fires for "  << ch << std::endl;
     }//end of channel loop
 
@@ -137,7 +137,7 @@ namespace fememu {
     }
     
     short nwindows = winstarts.size();
-    if(info()) std::cout << "[fememu::emulate] number of windows: " << nwindows << std::endl;
+    if(debug()) std::cout << "[fememu::emulate] number of windows: " << nwindows << std::endl;
 
     // Prepare output (initialize in a way less change in mem seg)
     FEMBeamTriggerOutput result(nwindows);
@@ -185,10 +185,10 @@ namespace fememu {
       result.vmaxhit[iwin]  = winmaxmulti;
       result.fire_time_v[iwin] = fire_time;
 
-      if(info()) std::cout << "[fememu::emulate] WinID=" << iwin << " maxdiff=" << winmaxdiff << " maxhit=" << winmaxmulti << std::endl;
-
-      if(info() && fire_time>=0)
-	if(normal()) std::cout << "[fememu::emulate] Trigger fired!" << std::endl;
+      if(debug()) 
+	std::cout << "[fememu::emulate] WinID=" << iwin << " maxdiff=" << winmaxdiff << " maxhit=" << winmaxmulti << std::endl;
+      if(info() && fire_time >= 0)
+	std::cout << "[fememu::emulate] Trigger fired @ " << fire_time << " !" << std::endl;
     }
     
     return result;
