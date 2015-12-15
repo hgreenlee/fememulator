@@ -19,7 +19,7 @@ namespace fememu {
       nfilled++;
     }
 
-    std::cout << " total waveforms: " << wfms.size() << ". nfilled: " << nfilled << std::endl;
+    if(debug()) std::cout << " total waveforms: " << wfms.size() << ". nfilled: " << nfilled << std::endl;
 
     return ::fememu::FEMBeamTriggerAlgo::Emulate( chwfms );
   }
@@ -42,7 +42,7 @@ namespace fememu {
 
     }
 
-    std::cout << " total waveforms: " << wfms.size() << ". nfilled: " << nfilled << std::endl;
+    if(debug()) std::cout << " total waveforms: " << wfms.size() << ". nfilled: " << nfilled << std::endl;
 
     return ::fememu::FEMBeamTriggerAlgo::Emulate( chwfms );
   }

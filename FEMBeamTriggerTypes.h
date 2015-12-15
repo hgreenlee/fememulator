@@ -5,6 +5,15 @@
 #include <string>
 namespace fememu {
 
+  enum MessageLevel_t {
+    kDEBUG,
+    kINFO,
+    kNORMAL,
+    kWARNING,
+    kERROR,
+    kCRITICAL
+  };
+
   typedef std::vector<short> Waveform_t;
   typedef std::vector<Waveform_t> WaveformArray_t;
 

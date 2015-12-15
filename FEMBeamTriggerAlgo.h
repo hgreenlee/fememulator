@@ -9,7 +9,9 @@ namespace fememu {
   class FEMBeamTriggerAlgo {
   public:
     /// Default ctor
-    FEMBeamTriggerAlgo() {}
+    FEMBeamTriggerAlgo();
+    /// Config ctor
+    FEMBeamTriggerAlgo(const FEMBeamTriggerConfig& cfg);
     /// Default dtor
     ~FEMBeamTriggerAlgo(){}
 
@@ -20,6 +22,8 @@ namespace fememu {
     void Reset(const FEMBeamTriggerConfig& );
 
   private:
+    /// Verbosity level
+    MessageLevel_t _verbosity;
     /// FEM configuration for generating FEM Beam trigger
     FEMBeamTriggerConfig _cfg;
     /// Output trigger decision holder
@@ -31,7 +35,14 @@ namespace fememu {
     /// Computation variable: disc. 0 diff vector
     Waveform_t _diff0;
     /// Computation variable: disc. 3 diff vector
-    Waveform_t _diff3;
+    Waveform_t _diff3; 
+
+  protected:
+    inline bool debug   () const { return _verbosity <= kDEBUG;   }
+    inline bool info    () const { return _verbosity <= kINFO;    }
+    inline bool normal  () const { return _verbosity <= kNORMAL;  }
+    inline bool warning () const { return _verbosity <= kWARNING; }
+    inline bool error   () const { return _verbosity <= kERROR;   }
   };
 
 }

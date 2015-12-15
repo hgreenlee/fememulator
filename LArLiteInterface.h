@@ -11,6 +11,8 @@ namespace fememu {
   public:
     /// Default ctor
     LLInterface() : fememu::FEMBeamTriggerAlgo() {}
+    /// Config ctor
+    LLInterface(const FEMBeamTriggerConfig& cfg) : fememu::FEMBeamTriggerAlgo(cfg) {}
     /// Default dtor
     ~LLInterface(){}
 
