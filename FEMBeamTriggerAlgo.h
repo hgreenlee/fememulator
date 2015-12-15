@@ -18,9 +18,6 @@ namespace fememu {
     /// Executor function
     const FEMBeamTriggerOutput Emulate( const WaveformArray_t& );
 
-    /// Verbosity
-    MessageLevel_t _verbosity;
-
     /// FEM configuration for generating FEM Beam trigger
     FEMBeamTriggerConfig _cfg;
 
@@ -35,11 +32,11 @@ namespace fememu {
     Waveform_t _diff3;
 
   protected:
-    inline bool debug   () const { return _verbosity <= kDEBUG;   }
-    inline bool info    () const { return _verbosity <= kINFO;    }
-    inline bool normal  () const { return _verbosity <= kNORMAL;  }
-    inline bool warning () const { return _verbosity <= kWARNING; }
-    inline bool error   () const { return _verbosity <= kERROR;   }
+    inline bool debug   () const { return _cfg.fVerbosity <= kDEBUG;   }
+    inline bool info    () const { return _cfg.fVerbosity <= kINFO;    }
+    inline bool normal  () const { return _cfg.fVerbosity <= kNORMAL;  }
+    inline bool warning () const { return _cfg.fVerbosity <= kWARNING; }
+    inline bool error   () const { return _cfg.fVerbosity <= kERROR;   }
   };
 
 }

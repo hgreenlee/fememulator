@@ -26,6 +26,8 @@ namespace fememu {
   struct FEMBeamTriggerConfig {
   public:
 
+    MessageLevel_t fVerbosity; ///< Verbosity level
+
     bool fSetTriggerWindow;
 
     short fDiscr0delay;     ///< Delay to form a diff vector
@@ -53,6 +55,8 @@ namespace fememu {
     /// Default ctor
     FEMBeamTriggerConfig()
     {
+      fVerbosity = kNORMAL;
+      
       fDiscr0delay = fDiscr3delay = 3;
 
       fDiscr0threshold = 5;

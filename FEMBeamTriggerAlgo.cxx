@@ -5,17 +5,14 @@
 namespace fememu {
 
   FEMBeamTriggerAlgo::FEMBeamTriggerAlgo()
-    : _verbosity(kNORMAL)
   {}
 
   FEMBeamTriggerAlgo::FEMBeamTriggerAlgo(const FEMBeamTriggerConfig& cfg)
-    : _verbosity(kNORMAL)
-    , _cfg(cfg)
+    : _cfg(cfg)
   {}
 
   const FEMBeamTriggerOutput FEMBeamTriggerAlgo::Emulate( const WaveformArray_t& chwfms )
   {
-
     if(debug()) std::cout << __PRETTY_FUNCTION__ << std::endl;
     
     /*
