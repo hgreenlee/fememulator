@@ -17,10 +17,10 @@ namespace fememu {
     ~LLInterface(){}
 
     /// Add an interface type that accepts larlite::event_opdetwaveform
-    const FEMBeamTriggerOutput& Emulate( const ::larlite::event_opdetwaveform& );
+    FEMBeamTriggerOutput Emulate( const ::larlite::event_opdetwaveform& );
 
     /// Add an interface type that accepts larlite::event_opdetwaveform
-    const FEMBeamTriggerOutput& Emulate( const ::larlite::event_fifo& );
+    FEMBeamTriggerOutput Emulate( const ::larlite::event_fifo& );
 
   };
 }

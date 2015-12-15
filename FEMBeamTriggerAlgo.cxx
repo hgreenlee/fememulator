@@ -12,15 +12,7 @@ namespace fememu {
     , _cfg(cfg)
   {}
   
-  void FEMBeamTriggerAlgo::Reset(const FEMBeamTriggerConfig& cfg)
-  {
-    _cfg = cfg;
-    _trigger.vmaxdiff.clear();
-    _trigger.vmaxhit.clear();
-    _trigger.fire_time_v.clear();
-  }
-
-  const FEMBeamTriggerOutput& FEMBeamTriggerAlgo::Emulate( const WaveformArray_t& chwfms )
+  FEMBeamTriggerOutput FEMBeamTriggerAlgo::Emulate( const WaveformArray_t& chwfms )
   {
 
     if(debug()) std::cout << __PRETTY_FUNCTION__ << std::endl;
@@ -52,19 +44,13 @@ namespace fememu {
     if(debug()) std::cout << "number of windows: " << nwindows << std::endl;
 
     // Prepare output (initialize in a way less change in mem seg)
-    _trigger.vmaxdiff.resize(nwindows);
-    _trigger.vmaxhit.resize(nwindows);
-    _trigger.fire_time_v.clear();
-    //_trigger.fire_time_v.resize(nwindows);
-    for(size_t i=0; i<nwindows; ++i) {
-      _trigger.vmaxdiff[i] = _trigger.vmaxhit[i] = 0;
-      //_trigger.fire_time_v[i] = 0;
-    }
-    // break up waveform shorto windows and calculate trigger vars for each window
+    FEMBeamTriggerOutput res(nwindows);
+
+    // break up waveform into short windows and calculate trigger vars for each window
     if(debug()) std::cout << "size of wfm: " << wfmsize << std::endl;
     if ( wfmsize < _cfg.fMinReadoutTicks ) {
       if(normal()) std::cout << "Beam readout window size is too small! (" << wfmsize << " < " << _cfg.fMinReadoutTicks << ")" << std::endl;
-      return _trigger;
+      return res;
     }
     
     //
@@ -164,12 +150,12 @@ namespace fememu {
       }
 
       // store for the window
-      _trigger.vmaxdiff[iwin] = winmaxdiff;
-      _trigger.vmaxhit[iwin]  = winmaxmulti;
-      //_trigger.fire_time_v[iwin] = 
+      res.vmaxdiff[iwin] = winmaxdiff;
+      res.vmaxhit[iwin]  = winmaxmulti;
+      //res.fire_time_v[iwin] = 
     }
 
-    return _trigger;
+    return res;
   }
 
 }

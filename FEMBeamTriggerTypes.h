@@ -40,6 +40,9 @@ namespace fememu {
     short fFrontBuffer;     ///< Comment please!
     short fWindowSize;      ///< Comment please!
 
+    short fTriggerThresMult;  ///< FEM beam trigger multiplicity threshold
+    short fTriggerThresPHMAX; ///< FEM beam trigger PHMAX threshold
+
     /// Default ctor
     FEMBeamTriggerConfig()
     {
@@ -69,9 +72,10 @@ namespace fememu {
   public:
     
     /// Default ctor
-    FEMBeamTriggerOutput(const size_t wf_size=1500)
-      : vmaxdiff ( 1500, 0 )
-      , vmaxhit  ( 1500, 0 )
+    FEMBeamTriggerOutput(const size_t nwindows=0)
+      : vmaxdiff    ( nwindows,  0 )
+      , vmaxhit     ( nwindows,  0 )
+      , fire_time_v ( nwindows, -1 )
     {}
 
     /// Default dtor
@@ -79,7 +83,7 @@ namespace fememu {
     
     std::vector< short  > vmaxdiff;    ///< PHMAX sum vector
     std::vector< short  > vmaxhit;     ///< Multiplicity sum vector
-    std::vector< size_t > fire_time_v; ///< Trigger decision times
+    std::vector< int    > fire_time_v; ///< Trigger decision times (<0 means did not fire)
 
   };
 

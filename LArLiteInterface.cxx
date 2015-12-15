@@ -5,7 +5,7 @@
 #include "FEMBeamTriggerConstants.h"
 namespace fememu {
 
-  const FEMBeamTriggerOutput& LLInterface::Emulate( const ::larlite::event_opdetwaveform& wfms ) 
+  FEMBeamTriggerOutput LLInterface::Emulate( const ::larlite::event_opdetwaveform& wfms )
   {
 
     WaveformArray_t chwfms(32);
@@ -24,7 +24,7 @@ namespace fememu {
     return ::fememu::FEMBeamTriggerAlgo::Emulate( chwfms );
   }
 
-  const FEMBeamTriggerOutput& LLInterface::Emulate(const ::larlite::event_fifo& wfms ) 
+  FEMBeamTriggerOutput LLInterface::Emulate(const ::larlite::event_fifo& wfms )
   {
 
     WaveformArray_t chwfms(32);

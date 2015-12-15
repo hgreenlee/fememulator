@@ -16,18 +16,14 @@ namespace fememu {
     ~FEMBeamTriggerAlgo(){}
 
     /// Executor function
-    const FEMBeamTriggerOutput& Emulate( const WaveformArray_t& );
+    FEMBeamTriggerOutput Emulate( const WaveformArray_t& );
 
-    /// Config resetter (resets output holder as well)
-    void Reset(const FEMBeamTriggerConfig& );
-
-  private:
     /// Verbosity level
     MessageLevel_t _verbosity;
     /// FEM configuration for generating FEM Beam trigger
     FEMBeamTriggerConfig _cfg;
-    /// Output trigger decision holder
-    FEMBeamTriggerOutput _trigger;
+
+  private:
     /// Computation variable: channel-wise phmax vector
     WaveformArray_t _chdiff;
     /// Computation variable: channel-wise multiplicity vector
