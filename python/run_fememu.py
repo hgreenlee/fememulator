@@ -4,56 +4,53 @@ rt.gSystem.Load("libFEMemulator.so")
 
 fin = sys.argv[1]
 
-#product_key = "opdigit_pmtreadout"
-product_key = "fifo_pmt_xmit"
+#product_name = "opdigit_pmtreadout" # for opdetwaveform
+product_name = "fifo_pmt_xmit"      # for fifo
 
-tree=rt.TChain("%s_tree" % product_key)
+tree = rt.TChain("%s_tree" % product_name)
 tree.AddFile(fin)
 
-nentries = tree.GetEntries();
+entry = 0
+bytes = tree.GetEntry(entry)
 
 config = rt.fememu.FEMBeamTriggerConfig()
-config.fDiscr0delay = 4
-config.fDiscr3delay = 4
+config.fSetTriggerWindow = False
+config.fDiscr0delay = 3
+config.fDiscr3delay = 3
 config.fDiscr0threshold = 5
-config.fDiscr3threshold = 5
-config.fDiscr0precount = 10
+config.fDiscr3threshold = 10
+config.fDiscr0precount = 3
 config.fDiscr0deadtime = 6
 config.fDiscr3deadtime = 6
 config.fDiscr0width = 6
 config.fDiscr3width = 6
 config.fMinReadoutTicks = 500
-config.fFrontBuffer = 0
+config.fTriggerWinStartTick = 0
 config.fWindowSize = 103
+# Trigger conditions
+config.fTriggerThresMult = 1
+config.fTriggerThresPHMAX = 1000
 
-print "window size, front buffer"
-print config.fWindowSize, config.fFrontBuffer
-print "Looping over",nentries,"entries..."
-algo = rt.fememu.LLInterface()
-algo.Reset(config)
+fememu = rt.fememu.LLInterface(config)
+fememu._verbosity=rt.fememu.kDEBUG
+product = None
+while bytes>0:
 
-br = None
-for entry in xrange(nentries):
+    exec('product = tree.%s_branch' % product_name)
 
-    print "\033[93m[Entry\033[00m",entry
-    
-    tree.GetEntry(entry)
+    out = fememu.Emulate(product)
+    entry += 1
 
-    exec('br = tree.%s_branch' % product_key)
-
-    if not br:
-        sys.stderr.write('\nFailed to fetch a product branch %s\n' % product_key)
-        raise Exception
-
-    # If this is fifo type, only use module address 4... (HACK)
+    # If this is fifo type, only use module address 4 (platform) or 5 (test-stand) ... (HACK)
     try:
-        if br.size() and not br[0].module_address() == 4: continue
-
+        if br.size() and not br[0].module_address() == 5: continue
+        
     except Exception:
         pass
 
-    result = algo.Emulate(br)
-    print
+    tree.GetEntry( entry )
+    if entry==10:
+        break
 
 #print digit_array.size()
 
