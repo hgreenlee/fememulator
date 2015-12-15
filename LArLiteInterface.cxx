@@ -5,7 +5,7 @@
 #include "FEMBeamTriggerConstants.h"
 namespace fememu {
 
-  const FEMBeamTriggerOutput& LLInterface::Emulate( const ::larlite::event_opdetwaveform& wfms ) 
+  const FEMBeamTriggerOutput LLInterface::Emulate( const ::larlite::event_opdetwaveform& wfms )
   {
 
     WaveformArray_t chwfms(32);
@@ -19,12 +19,12 @@ namespace fememu {
       nfilled++;
     }
 
-    std::cout << " total waveforms: " << wfms.size() << ". nfilled: " << nfilled << std::endl;
+    if(debug()) std::cout << " total waveforms: " << wfms.size() << ". nfilled: " << nfilled << std::endl;
 
     return ::fememu::FEMBeamTriggerAlgo::Emulate( chwfms );
   }
 
-  const FEMBeamTriggerOutput& LLInterface::Emulate(const ::larlite::event_fifo& wfms ) 
+  const FEMBeamTriggerOutput LLInterface::Emulate(const ::larlite::event_fifo& wfms )
   {
 
     WaveformArray_t chwfms(32);
@@ -42,7 +42,7 @@ namespace fememu {
 
     }
 
-    std::cout << " total waveforms: " << wfms.size() << ". nfilled: " << nfilled << std::endl;
+    if(debug()) std::cout << " total waveforms: " << wfms.size() << ". nfilled: " << nfilled << std::endl;
 
     return ::fememu::FEMBeamTriggerAlgo::Emulate( chwfms );
   }

@@ -4,25 +4,27 @@
 
 namespace fememu {
 
-  void FEMBeamTriggerAlgo::Reset(const FEMBeamTriggerConfig& cfg)
-  {
-    _cfg = cfg;
-    _trigger.vmaxdiff.clear();
-    _trigger.vmaxhit.clear();
-    _trigger.fire_time_v.clear();
-  }
+  FEMBeamTriggerAlgo::FEMBeamTriggerAlgo()
+    : _verbosity(kNORMAL)
+  {}
 
-  const FEMBeamTriggerOutput& FEMBeamTriggerAlgo::Emulate( const WaveformArray_t& chwfms )
+  FEMBeamTriggerAlgo::FEMBeamTriggerAlgo(const FEMBeamTriggerConfig& cfg)
+    : _verbosity(kNORMAL)
+    , _cfg(cfg)
+  {}
+
+  const FEMBeamTriggerOutput FEMBeamTriggerAlgo::Emulate( const WaveformArray_t& chwfms )
   {
 
+    if(debug()) std::cout << __PRETTY_FUNCTION__ << std::endl;
+    
     /*
       Run basic check to make sure I did not get a crap:
       0) all waveform must be of equal length
       1) there should not be a channel above max ch (or just ignore it)
     */
-    if ( _cfg.fVerbose )
-      std::cout << "[fememu::emulate]" << std::endl;
-
+    if(debug()) std::cout << "[fememu::emulate]" << std::endl;
+      
     size_t wfmsize=0;
     for(auto const& wf : chwfms) {
       if(!wfmsize) {
@@ -37,8 +39,14 @@ namespace fememu {
     if(NChannels > (kMaxPMTChannel+1))
       throw EmulatorException("Found channel number larger than max specified (kMaxPMTChannel)");
 
-    // first calculate accumulators for each waveform
+    if ( wfmsize < (size_t)_cfg.fMinReadoutTicks ) {
+      if(normal()) std::cout << "[fememu::emulate] Beam readout window size is too small! (" << wfmsize << " < " << _cfg.fMinReadoutTicks << ")" << std::endl;
+      return FEMBeamTriggerOutput();
+    }
 
+    //
+    // first calculate accumulators for each waveform
+    //
     _chdiff.resize(NChannels);
     _chhit.resize(NChannels);
     for(auto& wfm : _chdiff) {
@@ -64,7 +72,7 @@ namespace fememu {
       for (short tick=_cfg.fDiscr3delay; tick<(short)wfm.size(); tick++)
 	_diff3.at(tick) = wfm.at(tick)-wfm.at(tick-_cfg.fDiscr3delay);
 
-      //std::cout << "filled diffs for "  << ch << std::endl;
+      if(info()) std::cout << "filled diffs for "  << ch << std::endl;
 
       // determine triggers and fill accumulators
       std::vector<short> ttrig0;
@@ -93,7 +101,7 @@ namespace fememu {
 	      if ( tmaxdiff<_diff3.at(t) )
 	    	tmaxdiff = _diff3.at(t);
 	    }
-	    if ( _cfg.fVerbose )
+	    if(info())
 	      std::cout << "[fememu::emulate] discr 3 fire: " << tmaxdiff << " " << _diff3.at(tick) << std::endl;
 	    // fill the accumulators
 	    short tend = std::min( (short)(tick+_cfg.fDiscr3deadtime), (short)_diff3.size() );
@@ -104,12 +112,14 @@ namespace fememu {
 	  }
 	}
       }//end of wfm loop for trigger and accumulators
-      if ( _cfg.fVerbose )
+      if(info())
 	std::cout << "[fememu::emulate] found trig " << ttrig3.size() << " fires for "  << ch << std::endl;
     }//end of channel loop
 
-    
 
+        //
+    // Prepare output trigger object
+    //
     std::vector<short> winstarts;
     if ( _cfg.fSetTriggerWindow ) {
       // define location of trigger window
@@ -128,27 +138,16 @@ namespace fememu {
 	winstarts.push_back( winstart );
       }
     }
+    
     short nwindows = winstarts.size();
-    if ( _cfg.fVerbose )
-      std::cout << "[fememu::emulate] number of windows: " << nwindows << std::endl;
+    if(info()) std::cout << "[fememu::emulate] number of windows: " << nwindows << std::endl;
 
     // Prepare output (initialize in a way less change in mem seg)
-    _trigger.vmaxdiff.resize(nwindows);
-    _trigger.vmaxhit.resize(nwindows);
-    _trigger.fire_time_v.clear();
-    //_trigger.fire_time_v.resize(nwindows);
-    for(size_t i=0; i<(size_t)nwindows; ++i) {
-      _trigger.vmaxdiff[i] = _trigger.vmaxhit[i] = 0;
-      //_trigger.fire_time_v[i] = 0;
-    }
+    FEMBeamTriggerOutput result(nwindows);
 
-
-    //std::cout << "size of wfm: " << wfmsize << std::endl;
-    if ( wfmsize < (size_t)_cfg.fMinReadoutTicks ) {
-      std::cout << "[fememu::emulate] Beam readout window size is too small! (" << wfmsize << " < " << _cfg.fMinReadoutTicks << ")" << std::endl;
-      return _trigger;
-    }
-
+    //
+    // Fill trigger output
+    //
     for (short iwin=0; iwin<nwindows; iwin++) {
       short winstart = winstarts.at(iwin);
       short winend   = winstart + _cfg.fWindowSize;
@@ -156,7 +155,8 @@ namespace fememu {
       if ( (size_t)winend>=wfmsize )
 	continue;
       short winmaxmulti = 0;
-      short winmaxdiff = 0;
+      short winmaxdiff  = 0;
+      int   fire_time   = -1;
       for (short tick=winstart; tick<winend; tick++) {
 	short maxdiff_ = 0;
 	short nhit_ = 0;
@@ -168,17 +168,26 @@ namespace fememu {
 	  winmaxdiff = maxdiff_;
 	if ( winmaxmulti < nhit_ )
 	  winmaxmulti = nhit_;
+	if(fire_time < 0 &&
+	   winmaxdiff > _cfg.fTriggerThresPHMAX &&
+	   winmaxmulti > _cfg.fTriggerThresMult)
+	  fire_time = tick;
       }
-      
-      // store for the window
-      _trigger.vmaxdiff[iwin] = winmaxdiff;
-      _trigger.vmaxhit[iwin]  = winmaxmulti;
-      if ( _cfg.fVerbose )
-	std::cout << "[fememu::emulate] WinID=" << iwin << " maxdiff=" << winmaxdiff << " maxhit=" << winmaxmulti << std::endl;
-      //_trigger.fire_time_v[iwin] = 
+
+      // store results
+      result.window_start_v[iwin] = winstart;
+      result.window_end_v[iwin] = winend;
+      result.vmaxdiff[iwin] = winmaxdiff;
+      result.vmaxhit[iwin]  = winmaxmulti;
+      result.fire_time_v[iwin] = fire_time;
+
+      if(info()) std::cout << "[fememu::emulate] WinID=" << iwin << " maxdiff=" << winmaxdiff << " maxhit=" << winmaxmulti << std::endl;
+
+      if(fire_time>=0)
+	if(normal()) std::cout << "[fememu::emulate] Trigger fired!" << std::endl;
     }
     
-    return _trigger;
+    return result;
   }
   
 }

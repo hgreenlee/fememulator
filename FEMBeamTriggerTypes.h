@@ -7,6 +7,16 @@
 
 namespace fememu {
 
+  /// Message level for an algorithm
+  enum MessageLevel_t {
+    kDEBUG,
+    kINFO,
+    kNORMAL,
+    kWARNING,
+    kERROR,
+    kCRITICAL
+  };
+
   typedef std::vector<short> Waveform_t;
   typedef std::vector<Waveform_t> WaveformArray_t;
 
@@ -16,27 +26,29 @@ namespace fememu {
   struct FEMBeamTriggerConfig {
   public:
 
-    bool fVerbose;
     bool fSetTriggerWindow;
 
-    short fDiscr0delay; ///< Delay to form a diff vector
-    short fDiscr3delay; ///< Delay to form a diff vector
+    short fDiscr0delay;     ///< Delay to form a diff vector
+    short fDiscr3delay;     ///< Delay to form a diff vector
     
     short fDiscr0threshold; ///< Disc. 0 threshold
     short fDiscr3threshold; ///< Disc. 3 threshold
  
-    short fDiscr0precount; ///< Precount for disc. 0 to fire
+    short fDiscr0precount;  ///< Precount for disc. 0 to fire
     
-    short fDiscr0deadtime; ///< Deadtime for disc. 0
-    short fDiscr3deadtime; ///< Deadtime for disc. 3 (does not exist! FIX ME)
+    short fDiscr0deadtime;  ///< Deadtime for disc. 0
+    short fDiscr3deadtime;  ///< Deadtime for disc. 3 (does not exist! FIX ME)
     
-    short fDiscr0width; ///< Width for disc. 0... WHAT IS THIS?
-    short fDiscr3width; ///< Width for disc. 3
+    short fDiscr0width;     ///< Width for disc. 0... WHAT IS THIS?
+    short fDiscr3width;     ///< Width for disc. 3
 
     short fTriggerWinStartTick; ///< tick where trigger window starts (only relevant if fSetTriggerWindow)
-    short fMinReadoutTicks; ///< Ignore waveform if has ticks less than this number. Used to separate cosmic windows and beam windows
-    short fFrontBuffer;     ///< Number of ticks to skip in front of waveform
-    short fWindowSize;      ///< Size of PMT Trigger Window in ticks
+    short fMinReadoutTicks;     ///< Ignore waveform if has ticks less than this number. Used to separate cosmic windows and beam windows
+    short fFrontBuffer;         ///< Number of ticks to skip in front of waveform
+    short fWindowSize;          ///< Size of PMT Trigger Window in ticks
+
+    short fTriggerThresMult;    ///< FEM beam trigger threshold (multiplicity)
+    short fTriggerThresPHMAX;   ///< FEM beam trigger threshold (PHMAX sum)
 
     /// Default ctor
     FEMBeamTriggerConfig()
@@ -57,9 +69,12 @@ namespace fememu {
       fMinReadoutTicks = 500;
       fFrontBuffer = 20;
       fWindowSize = 103;
-      fVerbose = false;
+
       fSetTriggerWindow = false;
       fTriggerWinStartTick = 300;
+      
+      fTriggerThresMult  = 4;
+      fTriggerThresPHMAX = 80;
     }
     
   };
@@ -70,17 +85,22 @@ namespace fememu {
   public:
     
     /// Default ctor
-    FEMBeamTriggerOutput(const size_t wf_size=1500)
-      : vmaxdiff ( wf_size, 0 )
-      , vmaxhit  ( wf_size, 0 )
+    FEMBeamTriggerOutput(const size_t nwindows=0)
+      : window_start_v ( nwindows,  0 )
+      , window_end_v   ( nwindows,  0 )
+      , vmaxdiff       ( nwindows,  0 )
+      , vmaxhit        ( nwindows,  0 )
+      , fire_time_v    ( nwindows, -1 )
     {}
 
     /// Default dtor
     ~FEMBeamTriggerOutput() {}
-    
-    std::vector< short  > vmaxdiff;    ///< PHMAX sum vector
-    std::vector< short  > vmaxhit;     ///< Multiplicity sum vector
-    std::vector< size_t > fire_time_v; ///< Trigger decision times
+
+    std::vector< size_t > window_start_v; ///< Window start tick
+    std::vector< size_t > window_end_v;   ///< Window end   tick
+    std::vector< short  > vmaxdiff;       ///< PHMAX sum vector
+    std::vector< short  > vmaxhit;        ///< Multiplicity sum vector
+    std::vector< int    > fire_time_v;    ///< Trigger decision times (-1 means not fired)
 
   };
 

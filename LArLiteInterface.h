@@ -11,14 +11,16 @@ namespace fememu {
   public:
     /// Default ctor
     LLInterface() : fememu::FEMBeamTriggerAlgo() {}
+    /// Config ctor
+    LLInterface(const FEMBeamTriggerConfig& cfg) : fememu::FEMBeamTriggerAlgo(cfg) {}
     /// Default dtor
     ~LLInterface(){}
 
     /// Add an interface type that accepts larlite::event_opdetwaveform
-    const FEMBeamTriggerOutput& Emulate( const ::larlite::event_opdetwaveform& );
+    const FEMBeamTriggerOutput Emulate( const ::larlite::event_opdetwaveform& );
 
     /// Add an interface type that accepts larlite::event_opdetwaveform
-    const FEMBeamTriggerOutput& Emulate( const ::larlite::event_fifo& );
+    const FEMBeamTriggerOutput Emulate( const ::larlite::event_fifo& );
 
   };
 }
