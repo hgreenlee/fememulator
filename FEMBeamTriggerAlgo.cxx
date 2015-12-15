@@ -190,7 +190,7 @@ namespace fememu {
 
       if(info()) std::cout << "[fememu::emulate] WinID=" << iwin << " maxdiff=" << winmaxdiff << " maxhit=" << winmaxmulti << std::endl;
 
-      if(fire_time>=0)
+      if(info() && fire_time>=0)
 	if(normal()) std::cout << "[fememu::emulate] Trigger fired!" << std::endl;
     }
     
