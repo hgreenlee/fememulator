@@ -52,6 +52,9 @@ namespace fememu {
     short fTriggerThresMult;    ///< FEM beam trigger threshold (multiplicity)
     short fTriggerThresPHMAX;   ///< FEM beam trigger threshold (PHMAX sum)
 
+    short fTriggerModuleWinStartTick; ///< Trigger Module start tick
+    short fTriggerModuleWindowSize;   ///< Trigger module window size in ticks
+
     /// Default ctor
     FEMBeamTriggerConfig()
     {
