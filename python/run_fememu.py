@@ -37,7 +37,7 @@ for entry in xrange(tree.GetEntries()):
     
     exec('product = tree.%s_branch' % product_name)
 
-    if config.fVerbosity <= rt.fememu.kINFO:
+    if config.fVerbosity <= 1:#rt.fememu.kINFO:
         print '\033[93mEntry',entry,'\033[00m'
 
     out = fememu.Emulate(product)
