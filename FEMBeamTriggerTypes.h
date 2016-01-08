@@ -28,58 +28,49 @@ namespace fememu {
 
     MessageLevel_t fVerbosity; ///< Verbosity level
 
-    bool fSetTriggerWindow;
+    short fMinReadoutTicks;  ///< Ignore waveform if has ticks less than this number. Used to separate cosmic windows and beam windows
 
-    short fDiscr0delay;     ///< Delay to form a diff vector
-    short fDiscr3delay;     ///< Delay to form a diff vector
-    
-    short fDiscr0threshold; ///< Disc. 0 threshold
-    short fDiscr3threshold; ///< Disc. 3 threshold
- 
     short fDiscr0precount;  ///< Precount for disc. 0 to fire
-    
+    short fDiscr0delay;     ///< Delay to form a diff vector
     short fDiscr0deadtime;  ///< Deadtime for disc. 0
-    short fDiscr3deadtime;  ///< Deadtime for disc. 3 (does not exist! FIX ME)
+    short fDiscr0threshold; ///< Disc. 0 threshold
     
-    short fDiscr0width;     ///< Width for disc. 0... WHAT IS THIS?
     short fDiscr3width;     ///< Width for disc. 3
+    short fDiscr3delay;     ///< Delay to form a diff vector
+    short fDiscr3deadtime;  ///< Deadtime for disc. 3 (does not exist! FIX ME)
+    short fDiscr3threshold; ///< Disc. 3 threshold
 
-    short fTriggerWinStartTick; ///< tick where trigger window starts (only relevant if fSetTriggerWindow)
-    short fMinReadoutTicks;     ///< Ignore waveform if has ticks less than this number. Used to separate cosmic windows and beam windows
-    short fFrontBuffer;         ///< Number of ticks to skip in front of waveform
-    short fWindowSize;          ///< Size of PMT Trigger Window in ticks
+    short fDiscr3WindowStart; ///< tick where Disc3 fire-allowed window start
+    short fDiscr3WindowSize;  ///< size of Disc3 fire-allowed window
+
+    short fTriggerWindowStart; ///< start of PMT Trigger Window
+    short fTriggerWindowSize;  ///< size of PMT Trigger Window in ticks
 
     short fTriggerThresMult;    ///< FEM beam trigger threshold (multiplicity)
     short fTriggerThresPHMAX;   ///< FEM beam trigger threshold (PHMAX sum)
-
-    short fTriggerModuleWinStartTick; ///< Trigger Module start tick
-    short fTriggerModuleWindowSize;   ///< Trigger module window size in ticks
 
     /// Default ctor
     FEMBeamTriggerConfig()
     {
       fVerbosity = kNORMAL;
       
-      fDiscr0delay = fDiscr3delay = 3;
-
+      fDiscr0delay = 4;
       fDiscr0threshold = 5;
-      fDiscr3threshold = 10;
-
-      fDiscr0precount = 3;
-
       fDiscr0deadtime = 6;
+      fDiscr0precount = 3;
+      
+      fDiscr3delay = 4;
+      fDiscr3threshold = 10;
       fDiscr3deadtime = 6;
-
-      fDiscr0width = 6;
       fDiscr3width = 6;
 
-      fMinReadoutTicks = 500;
-      fFrontBuffer = 20;
-      fWindowSize = 103;
+      fDiscr3WindowStart = 100;
+      fDiscr3WindowSize  = 104;
 
-      fSetTriggerWindow = false;
-      fTriggerWinStartTick = 300;
-      
+      fTriggerWindowStart = 100;
+      fTriggerWindowSize  = 104;
+
+      fMinReadoutTicks = 500;
       fTriggerThresMult  = 4;
       fTriggerThresPHMAX = 80;
     }
@@ -93,22 +84,22 @@ namespace fememu {
     
     /// Default ctor
     FEMBeamTriggerOutput(const size_t nwindows=0)
-      : window_start_v ( nwindows,  0 )
-      , window_end_v   ( nwindows,  0 )
-      , vmaxdiff       ( nwindows,  0 )
-      , vmaxhit        ( nwindows,  0 )
-      , fire_time_v    ( nwindows, -1 )
+      : window_start (  0 )
+      , window_end   (  0 )
+      , vmaxdiff     (  0 )
+      , vmaxhit      (  0 )
+      , fire_time    ( -1 )
     {}
 
     /// Default dtor
     ~FEMBeamTriggerOutput() {}
 
-    std::vector< size_t > window_start_v; ///< Window start tick
-    std::vector< size_t > window_end_v;   ///< Window end   tick
-    std::vector< short  > vmaxdiff;       ///< PHMAX sum vector
-    std::vector< short  > vmaxhit;        ///< Multiplicity sum vector
-    std::vector< int    > fire_time_v;    ///< Trigger decision times (-1 means not fired)
-
+    size_t window_start; ///< Window start tick
+    size_t window_end;   ///< Window end   tick
+    short  vmaxdiff;     ///< PHMAX sum
+    short  vmaxhit;      ///< Multiplicity sum
+    int    fire_time;    ///< Trigger decision times (-1 means not fired)
+    
   };
 
   /// Exception class for FEMemulator
