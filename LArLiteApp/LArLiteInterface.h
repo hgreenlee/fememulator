@@ -1,7 +1,7 @@
 #ifndef __FEMEMULATOR_LARLITE_INTERFACE_H
 #define __FEMEMULATOR_LARLITE_INTERFACE_H
 #include <vector>
-#include "FEMBeamTriggerAlgo.h"
+#include "FEMBeamTrigger/FEMBeamTriggerAlgo.h"
 #include "DataFormat/opdetwaveform.h"
 #include "DataFormat/fifo.h"
 namespace fememu {

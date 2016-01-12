@@ -6,3 +6,4 @@ FEMemulator_dict.*
 *.root
 *.dat
 *.ipynb_checkpoints
+/build/*

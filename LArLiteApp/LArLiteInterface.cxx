@@ -2,7 +2,7 @@
 #define __FEMEMULATOR_LARLITE_INTERFACE_CXX
 
 #include "LArLiteInterface.h"
-#include "FEMBeamTriggerConstants.h"
+#include "FEMBeamTrigger/FEMBeamTriggerConstants.h"
 namespace fememu {
 
   const FEMBeamTriggerOutput LLInterface::Emulate( const ::larlite::event_opdetwaveform& wfms )

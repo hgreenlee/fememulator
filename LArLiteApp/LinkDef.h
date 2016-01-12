@@ -10,9 +10,6 @@
 #pragma link off all functions;
 
 #pragma link C++ namespace fememu+;
-#pragma link C++ class fememu::FEMBeamTriggerConfig+;
-#pragma link C++ class fememu::FEMBeamTriggerOutput+;
-#pragma link C++ class fememu::FEMBeamTriggerAlgo+;
 #pragma link C++ class fememu::LLInterface+;
 
 #endif

@@ -3,8 +3,8 @@
 #
 
 # specific names for this package
-DICT  = FEMemulator_dict
-SHLIB = libFEMemulator.so
+DICT  = LLFEMEmulator_dict
+SHLIB = libLLFEMEmulator.so
 SOURCES = $(filter-out $(DICT).cxx, $(wildcard *.cxx))
 FMWK_HEADERS = LinkDef.h $(DICT).h
 HEADERS = $(filter-out $(FMWK_HEADERS), $(wildcard *.h))
@@ -24,7 +24,7 @@ HOST            = $(shell uname -n)
 OSNAMEMODE      = $(OSNAME)
 
 CXXFLAGS += -g
-LDFLAGS += $(shell larlite-config --libs) 
+LDFLAGS += $(shell larlite-config --libs) -lFEMEmulator
 #LDFLAGS += -L$(shell pg_config --libdir) -lpq
 #LDFLAGS += -L${BOOST_LIB} -lboost_serialization
 
