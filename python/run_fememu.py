@@ -1,13 +1,13 @@
 from fememu_pycfg import apply_config
 import os,sys
 import ROOT as rt
-rt.gSystem.Load("libFEMemulator.so")
+rt.gSystem.Load("libFEMBeamTrigger_LArLiteApp.so")
 
 #
 # Get configuration
 #
 cfg_file = sys.argv[1]
-config = rt.fememu.FEMBeamTriggerConfig()
+config = rt.trigger.fememu.FEMBeamTriggerConfig()
 if not apply_config(config,cfg_file):
     print '\033[91m[ERROR]\033[00m exiting...'
     sys.exit(1)
@@ -25,7 +25,7 @@ for f in fin_list:
 #
 # Create FEMBeamTrigger algorithm w/ configuration
 #
-fememu = rt.fememu.LLInterface(config)
+fememu = rt.trigger.fememu.LLInterface(config)
 
 #
 # Loop over TTree entries
@@ -37,7 +37,7 @@ for entry in xrange(tree.GetEntries()):
     
     exec('product = tree.%s_branch' % product_name)
 
-    if config.fVerbosity <= 1:#rt.fememu.kINFO:
+    if config.fVerbosity <= 1:#rt.trigger.fememu.kINFO:
         print '\033[93mEntry',entry,'\033[00m'
 
     out = fememu.Emulate(product)

@@ -17,7 +17,6 @@ ENDIF()
 
 set(DAQ_TRIGGER_ALGO_BUILDDIR ${CMAKE_SOURCE_DIR}/build)
 set(DAQ_TRIGGER_ALGO_INCDIR ${CMAKE_SOURCE_DIR})
-#set(LARLITE_LIBDIR $ENV{LARLITE_LIBDIR})
 
 IF(DEFINED ENV{LARLITE_LIBDIR})
 
@@ -26,6 +25,7 @@ execute_process(COMMAND larlite-config --incdir OUTPUT_VARIABLE LARLITE_INC OUTP
 execute_process(COMMAND larlite-config --libs OUTPUT_VARIABLE LARLITE_LIB OUTPUT_STRIP_TRAILING_WHITESPACE)
 set(DAQ_TRIGGER_ALGO_LIBDIR $ENV{LARLITE_LIBDIR})
 execute_process(COMMAND mkdir -p ${DAQ_TRIGGER_ALGO_LIBDIR})
+add_subdirectory(SWTriggerBase)
 add_subdirectory(FEMBeamTrigger)
 add_subdirectory(LArLiteApp)
 
@@ -34,6 +34,7 @@ ELSE()
 message("-- ${Yellow}Building stand-alone${ColorReset}")
 set(DAQ_TRIGGER_ALGO_LIBDIR ${CMAKE_SOURCE_DIR}/build/lib)
 execute_process(COMMAND mkdir -p ${DAQ_TRIGGER_ALGO_LIBDIR})
+add_subdirectory(SWTriggerBase)
 add_subdirectory(FEMBeamTrigger)
 
 ENDIF()

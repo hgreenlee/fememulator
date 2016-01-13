@@ -38,12 +38,12 @@ execute_process(COMMAND rootcling
 		-s ${DAQ_TRIGGER_ALGO_LIBDIR}/${SHLIB}
 		-rml ${SHLIB}
 		-rmf ${DAQ_TRIGGER_ALGO_LIBDIR}/libFEMBeamTrigger.rootmap
-		-c ${CINTFLAGS} -I${ROOT_INCDIR} -I.
+		-c ${CINTFLAGS} -I${ROOT_INCDIR} -I${DAQ_TRIGGER_ALGO_INCDIR} -I.
 		${HEADERS} ${LINKDEF})
 ELSE()
 execute_process(COMMAND rootcint
 		-f ${CMAKE_CURRENT_BINARY_DIR}/${DICT_NAME}.cxx 
-		-c -I${ROOT_INCDIR} -I. 
+		-c -I${ROOT_INCDIR} -I${DAQ_TRIGGER_ALGO_INCDIR} -I. 
 		-p  ${HEADERS} ${LINKDEF}
 		)
 ENDIF()
@@ -51,11 +51,13 @@ ENDIF()
 # Set include dirs
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${ROOT_INCDIR})
+include_directories(${DAQ_TRIGGER_ALGO_INCDIR})
 set(CMAKE_CXX_FLAGS "-std=c++11")
 
 # Generate a package library ... make sure dictionary comes the end
 add_library(FEMBeamTrigger SHARED ${SOURCES} ${CMAKE_CURRENT_BINARY_DIR}/${DICT_NAME}.cxx)
-target_link_libraries(FEMBeamTrigger ${ROOT_LIB} )
+target_link_libraries(FEMBeamTrigger ${ROOT_LIB} -L${DAQ_TRIGGER_ALGO_LIBDIR} -lSWTriggerBase )
+add_dependencies(FEMBeamTrigger SWTriggerBase)
 
 set_target_properties( FEMBeamTrigger
 		       PROPERTIES

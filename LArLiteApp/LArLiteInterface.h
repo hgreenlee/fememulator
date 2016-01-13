@@ -4,25 +4,28 @@
 #include "FEMBeamTrigger/FEMBeamTriggerAlgo.h"
 #include "DataFormat/opdetwaveform.h"
 #include "DataFormat/fifo.h"
-namespace fememu {
+namespace trigger {
 
-  /// LArLite interface class for fememu::FEMBeamTriggerAlgo class
-  class LLInterface : public fememu::FEMBeamTriggerAlgo {
-  public:
-    /// Default ctor
-    LLInterface() : fememu::FEMBeamTriggerAlgo() {}
-    /// Config ctor
-    LLInterface(const FEMBeamTriggerConfig& cfg) : fememu::FEMBeamTriggerAlgo(cfg) {}
-    /// Default dtor
-    ~LLInterface(){}
+  namespace fememu {
 
-    /// Add an interface type that accepts larlite::event_opdetwaveform
-    const FEMBeamTriggerOutput Emulate( const ::larlite::event_opdetwaveform& );
-
-    /// Add an interface type that accepts larlite::event_opdetwaveform
-    const FEMBeamTriggerOutput Emulate( const ::larlite::event_fifo& );
-
-  };
+    /// LArLite interface class for fememu::FEMBeamTriggerAlgo class
+    class LLInterface : public trigger::fememu::FEMBeamTriggerAlgo {
+    public:
+      /// Default ctor
+      LLInterface() : trigger::fememu::FEMBeamTriggerAlgo() {}
+      /// Config ctor
+      LLInterface(const FEMBeamTriggerConfig& cfg) : trigger::fememu::FEMBeamTriggerAlgo(cfg) {}
+      /// Default dtor
+      ~LLInterface(){}
+      
+      /// Add an interface type that accepts larlite::event_opdetwaveform
+      const trigger::Result Emulate( const ::larlite::event_opdetwaveform& );
+      
+      /// Add an interface type that accepts larlite::event_opdetwaveform
+      const trigger::Result Emulate( const ::larlite::event_fifo& );
+      
+    };
+  }
 }
 
 #endif

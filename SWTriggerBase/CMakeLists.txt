@@ -3,13 +3,17 @@ set(ColorReset "${Esc}[m")
 set(Yellow      "${Esc}[33m")
 
 cmake_minimum_required (VERSION 2.8)
-project (FEMBeamTrigger_LArLiteApp)
+project (SWTriggerBase)
+
+execute_process(COMMAND root-config --incdir OUTPUT_VARIABLE ROOT_INCDIR OUTPUT_STRIP_TRAILING_WHITESPACE)
+execute_process(COMMAND root-config --libs OUTPUT_VARIABLE ROOT_LIB OUTPUT_STRIP_TRAILING_WHITESPACE)
+execute_process(COMMAND python -c "import ROOT;print int(ROOT.gROOT.GetVersion()[0] == '6')" OUTPUT_VARIABLE USE_ROOT6 OUTPUT_STRIP_TRAILING_WHITESPACE)
 
 # Now set CMAKE variables for my use
-set(SHLIB "libFEMBeamTrigger_LArLiteApp.so")
+set(SHLIB "libSWTriggerBase.so")
 set(CMAKE_MACOSX_RPATH TRUE)
-#set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "./lib")
-set(DICT_NAME "FEMBeamTrigger_LArLiteAppDict")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "./lib")
+set(DICT_NAME "SWTriggerBaseDict")
 if(EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${DICT_NAME}.cxx)
   MESSAGE("-- Removing a dictionary file: ${Yellow}${DICT_NAME}.cxx${ColorReset}")
   file(REMOVE ${CMAKE_CURRENT_BINARY_DIR}/${DICT_NAME}.cxx)
@@ -33,13 +37,13 @@ execute_process(COMMAND rootcling
 		-f ${CMAKE_CURRENT_BINARY_DIR}/${DICT_NAME}.cxx
 		-s ${DAQ_TRIGGER_ALGO_LIBDIR}/${SHLIB}
 		-rml ${SHLIB}
-		-rmf ${DAQ_TRIGGER_ALGO_LIBDIR}/libFEMBeamTrigger_LArLiteApp.rootmap
-		-c ${CINTFLAGS} -I${ROOT_INCDIR} -I${LARLITE_INC} -I${DAQ_TRIGGER_ALGO_INCDIR} -I.
+		-rmf ${DAQ_TRIGGER_ALGO_LIBDIR}/libSWTriggerBase.rootmap
+		-c ${CINTFLAGS} -I${ROOT_INCDIR} -I.
 		${HEADERS} ${LINKDEF})
 ELSE()
 execute_process(COMMAND rootcint
 		-f ${CMAKE_CURRENT_BINARY_DIR}/${DICT_NAME}.cxx 
-		-c -I${ROOT_INCDIR} -I${LARLITE_INC} -I${DAQ_TRIGGER_ALGO_INCDIR} -I. 
+		-c -I${ROOT_INCDIR} -I. 
 		-p  ${HEADERS} ${LINKDEF}
 		)
 ENDIF()
@@ -47,35 +51,32 @@ ENDIF()
 # Set include dirs
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${ROOT_INCDIR})
-include_directories(${LARLITE_INC})
-include_directories(${DAQ_TRIGGER_ALGO_INCDIR})
 set(CMAKE_CXX_FLAGS "-std=c++11")
 
 # Generate a package library ... make sure dictionary comes the end
-add_library(FEMBeamTrigger_LArLiteApp SHARED ${SOURCES} ${CMAKE_CURRENT_BINARY_DIR}/${DICT_NAME}.cxx)
-target_link_libraries(FEMBeamTrigger_LArLiteApp ${ROOT_LIB} ${LARLITE_LIB} -L${DAQ_TRIGGER_ALGO_LIBDIR} -lSWTriggerBase -lFEMBeamTrigger)
-add_dependencies(FEMBeamTrigger_LArLiteApp FEMBeamTrigger)
+add_library(SWTriggerBase SHARED ${SOURCES} ${CMAKE_CURRENT_BINARY_DIR}/${DICT_NAME}.cxx)
+target_link_libraries(SWTriggerBase ${ROOT_LIB} )
 
-set_target_properties( FEMBeamTrigger_LArLiteApp
+set_target_properties( SWTriggerBase
 		       PROPERTIES
 	               LIBRARY_OUTPUT_DIRECTORY ${DAQ_TRIGGER_ALGO_LIBDIR}
 )
 if (APPLE)
-   set_property(TARGET FEMBeamTrigger_LArLiteApp PROPERTY PREFIX "lib")
-   set_property(TARGET FEMBeamTrigger_LArLiteApp PROPERTY OUTPUT_NAME "FEMBeamTrigger_LArLiteApp.so")
-   set_property(TARGET FEMBeamTrigger_LArLiteApp PROPERTY SUFFIX "")
+   set_property(TARGET SWTriggerBase PROPERTY PREFIX "lib")
+   set_property(TARGET SWTriggerBase PROPERTY OUTPUT_NAME "SWTriggerBase.so")
+   set_property(TARGET SWTriggerBase PROPERTY SUFFIX "")
 endif()
 
 
 # Generate a rootmap file
 IF(NOT ${USE_ROOT6}) 
-add_custom_command( TARGET FEMBeamTrigger_LArLiteApp
+add_custom_command( TARGET SWTriggerBase
 		    POST_BUILD
 		    COMMAND rlibmap ARGS -f
-		    -o ${DAQ_TRIGGER_ALGO_LIBDIR}/libFEMBeamTrigger_LArLiteApp.rootmap
-		    -l ${DAQ_TRIGGER_ALGO_LIBDIR}/libFEMBeamTrigger_LArLiteApp.so
+		    -o ${DAQ_TRIGGER_ALGO_LIBDIR}/libSWTriggerBase.rootmap
+		    -l ${DAQ_TRIGGER_ALGO_LIBDIR}/libSWTriggerBase.so
 		    -c ${CMAKE_CURRENT_SOURCE_DIR}/LinkDef.h
 )
 ENDIF()
-set_directory_properties( PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${DAQ_TRIGGER_ALGO_LIBDIR}/libFEMBeamTrigger_LArLiteApp.rootmap" )
+set_directory_properties( PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${DAQ_TRIGGER_ALGO_LIBDIR}/libSWTriggerBase.rootmap" )
 

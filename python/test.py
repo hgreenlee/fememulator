@@ -16,15 +16,15 @@ plt.rcParams.update({'font.size': 16})
 #k=larlite.trigger()
 from ROOT import larlite
 larlite.trigger()
-from ROOT import fememu
+from ROOT import trigger
 from fememu_pycfg import apply_config
 
 # emulator configuration
 cfg_file = 'debug_teststand.cfg'
-config = fememu.FEMBeamTriggerConfig()
+config = trigger.fememu.FEMBeamTriggerConfig()
 apply_config(config,cfg_file)
 # emulator construction
-emu = fememu.LLInterface(config)
+emu = trigger.fememu.LLInterface(config)
 f_trig = ROOT.TFile('debug_trig.root')
 f_xmit = ROOT.TFile('debug_fifo.root')
 t_trig = f_trig.Get('trigger_daq_tree')

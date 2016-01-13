@@ -1,4 +1,4 @@
-from ROOT import fememu
+from ROOT import trigger
 def apply_config(cfg_obj,cfg_file):
 
     if not cfg_file.endswith('.cfg'):

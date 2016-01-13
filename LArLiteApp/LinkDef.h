@@ -9,8 +9,7 @@
 #pragma link off all classes;
 #pragma link off all functions;
 
-#pragma link C++ namespace fememu+;
-#pragma link C++ class fememu::LLInterface+;
+#pragma link C++ class trigger::fememu::LLInterface+;
 
 #endif
 
