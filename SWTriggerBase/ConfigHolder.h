@@ -90,6 +90,7 @@ namespace trigger {
     
   };
 
+  #ifndef __CINT__
   template<> std::map< std::string, bool        >& ConfigHolder::GetContainer();
   template<> std::map< std::string, std::string >& ConfigHolder::GetContainer();	
   template<> std::map< std::string, int         >& ConfigHolder::GetContainer();	
@@ -98,7 +99,7 @@ namespace trigger {
   template<> std::map< std::string, std::vector< std::string > >& ConfigHolder::GetContainer();
   template<> std::map< std::string, std::vector< int         > >& ConfigHolder::GetContainer();
   template<> std::map< std::string, std::vector< double      > >& ConfigHolder::GetContainer();
-
+  #endif
 }
 
 #endif

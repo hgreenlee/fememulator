@@ -15,7 +15,7 @@
 #define __TRIGGER_EXCEPTION_H__
 
 #include <iostream>
-
+#include <exception>
 namespace trigger {
 
   /// Exception class for software trigger

@@ -47,7 +47,7 @@ set(UBDAQ_DATATYPES_INC $ENV{UBOONEDAQ_DATATYPES_INC})
 set(BOOST_LIB "-L$ENV{BOOST_LIB} -lboost_serialization")
 set(UBDAQ_DATATYPES_LIB "-L$ENV{UBOONEDAQ_DATATYPES_LIB} -lubdata_types")
 
-add_subdirectory(TriggerDAQApp)
+#add_subdirectory(TriggerDAQApp)
 
 ENDIF()
 
