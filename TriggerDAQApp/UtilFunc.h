@@ -2,7 +2,7 @@
 #define UTILFUNC_H
 
 #include <vector>
-namespace ubdaq {
+namespace trigger {
 
   unsigned int RollOver(unsigned int ref,
 			unsigned int subject,

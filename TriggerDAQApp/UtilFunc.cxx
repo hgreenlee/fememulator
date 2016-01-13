@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include "TString.h"
 #include <iostream>
-namespace ubdaq {
+namespace trigger {
 
   unsigned int RollOver(unsigned int ref,
 			unsigned int subject,
