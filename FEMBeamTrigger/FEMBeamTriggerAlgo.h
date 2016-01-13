@@ -2,24 +2,28 @@
 #define  __FEMBEAMTRIGGERALGO__
 
 #include <vector>
-#include "FEMBeamTriggerTypes.h"
+#include "TriggerAlgoTypes.h"
+#include "TriggerAlgoBase.h"
+#include "FEMBeamTriggerConfig.h"
 
-namespace fememu {
+namespace uboonetrigger {
 
-  class FEMBeamTriggerAlgo {
+  class FEMBeamTriggerAlgo : public TriggerAlgoBase {
   public:
     /// Default ctor
     FEMBeamTriggerAlgo();
     /// Config ctor
-    FEMBeamTriggerAlgo(const FEMBeamTriggerConfig&);
+#ifndef __MAKECINT__
+    FEMBeamTriggerAlgo( std::unique_ptr<FEMBeamTriggerConfig> cfg );
+#endif
     /// Default dtor
     ~FEMBeamTriggerAlgo(){}
 
-    /// Executor function
-    const FEMBeamTriggerOutput Emulate( const WaveformArray_t& );
 
-    /// FEM configuration for generating FEM Beam trigger
-    FEMBeamTriggerConfig _cfg;
+    /// Executor function
+#ifndef __MAKECINT__
+    virtual std::unique_ptr<TriggerOutputBase> Emulate( const WaveformArray_t& );
+#endif
 
     /// Summed (over channels) multiplicity vector getter
     const Waveform_t& Multiplicity() const;
@@ -52,13 +56,15 @@ namespace fememu {
     Waveform_t _chdiff_sum;
     /// Computation variable: multiplicity sum vector over channels
     Waveform_t _chhit_sum;
+    
+    const FEMBeamTriggerConfig& cfg() const { return *dynamic_cast<FEMBeamTriggerConfig*>(_cfg.get()); };
 
   protected:
-    inline bool debug   () const { return _cfg.fVerbosity <= kDEBUG;   }
-    inline bool info    () const { return _cfg.fVerbosity <= kINFO;    }
-    inline bool normal  () const { return _cfg.fVerbosity <= kNORMAL;  }
-    inline bool warning () const { return _cfg.fVerbosity <= kWARNING; }
-    inline bool error   () const { return _cfg.fVerbosity <= kERROR;   }
+    inline bool debug   () const { return cfg().fVerbosity <= kDEBUG;   }
+    inline bool info    () const { return cfg().fVerbosity <= kINFO;    }
+    inline bool normal  () const { return cfg().fVerbosity <= kNORMAL;  }
+    inline bool warning () const { return cfg().fVerbosity <= kWARNING; }
+    inline bool error   () const { return cfg().fVerbosity <= kERROR;   }
   };
 
 }
