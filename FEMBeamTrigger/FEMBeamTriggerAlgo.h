@@ -21,9 +21,7 @@ namespace uboonetrigger {
 
 
     /// Executor function
-#ifndef __MAKECINT__
-    virtual std::unique_ptr<TriggerOutputBase> Emulate( const WaveformArray_t& );
-#endif
+    virtual std::unique_ptr<::uboonetrigger::TriggerOutputBase> Emulate( const WaveformArray_t& );
 
     /// Summed (over channels) multiplicity vector getter
     const Waveform_t& Multiplicity() const;

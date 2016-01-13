@@ -29,8 +29,8 @@ namespace uboonetrigger {
 
 #ifndef __MAKECINT__    
     void setConfig( std::unique_ptr<TriggerConfigBase> cfg ) { _cfg = std::move(cfg); };
-    virtual std::unique_ptr<TriggerOutputBase> Evaluate( const WaveformArray_t& ) = 0;
 #endif
+    virtual std::unique_ptr<uboonetrigger::TriggerOutputBase> Evaluate( const WaveformArray_t& ) = 0;
     
   protected:
 #ifndef __MAKECINT__    
