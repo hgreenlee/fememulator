@@ -76,6 +76,8 @@ namespace trigger {
 
     ::peek_at_next_event<ub_PMT_CardData_v6>(false);
     ::handle_missing_words<ub_PMT_CardData_v6>(true);
+    ::peek_at_next_event<ub_TPC_CardData_v6>(false);
+    ::handle_missing_words<ub_TPC_CardData_v6>(true);
   }
 
   bool DAQFileInterface::ProcessEvent()
