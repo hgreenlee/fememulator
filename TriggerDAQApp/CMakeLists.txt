@@ -50,11 +50,11 @@ include_directories(${ROOT_INCDIR})
 include_directories(${BOOST_INC})
 include_directories(${DAQ_TRIGGER_ALGO_INCDIR})
 include_directories(${UBDAQ_DATATYPES_INC})
-set(CMAKE_CXX_FLAGS "-std=c++11")
+set(CMAKE_CXX_FLAGS "-std=c++1y")
 
 # Generate a package library ... make sure dictionary comes the end
 add_library(TriggerDAQApp SHARED ${SOURCES} ${CMAKE_CURRENT_BINARY_DIR}/${DICT_NAME}.cxx)
-target_link_libraries(TriggerDAQApp ${ROOT_LIB} ${BOOST_LIB} ${UBDAQ_DATATYPES_LIB} -L${DAQ_TRIGGER_ALGO_INCDIR} -lSWTriggerBase)
+target_link_libraries(TriggerDAQApp ${ROOT_LIB} ${BOOST_LIB} ${UBDAQ_DATATYPES_LIB} -L${DAQ_TRIGGER_ALGO_LIBDIR} -lSWTriggerBase)
 #add_dependencies(TriggerDAQApp SWTriggerBase)
 
 set_target_properties( TriggerDAQApp

@@ -42,6 +42,7 @@ ENDIF()
 
 IF(DEFINED ENV{UBOONEDAQ_DATATYPES_INC})
 
+message("-- ${Yellow}Building daq file interface${ColorReset}")
 set(BOOST_INC $ENV{BOOST_INC})
 set(UBDAQ_DATATYPES_INC $ENV{UBOONEDAQ_DATATYPES_INC})
 set(BOOST_LIB "-L$ENV{BOOST_LIB} -lboost_serialization")

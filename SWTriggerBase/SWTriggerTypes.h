@@ -5,7 +5,7 @@
 namespace trigger {
 
   /// Waveform
-  typedef std::vector<short> Waveform_t;
+  typedef std::vector<unsigned short> Waveform_t;
 
   /// An array of waveforms
   typedef std::vector<Waveform_t> WaveformArray_t;

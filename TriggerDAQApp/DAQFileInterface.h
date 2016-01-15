@@ -33,10 +33,10 @@ namespace trigger {
   public:
     
     /// Default constructor
-    LiteStorageManager();
+    DAQFileInterface();
     
     /// Default destructor
-    ~LiteStorageManager(){ }
+    ~DAQFileInterface(){ }
 
     void AddInputFile(const std::string fname) { _input_v.push_back(fname); }
     void SetTarget(size_t slot, size_t ch_start, size_t ch_count);
@@ -45,6 +45,7 @@ namespace trigger {
     bool ProcessEvent();
 
     const WaveformArray_t& WaveformArray() const { return _wf_v; }
+    unsigned int trigger_bits() const { return _trigger_bits; }
     double trigger_time  () const { return _trigger_time;  }
     double waveform_time () const { return _waveform_time; } 
     size_t event  () const { return _event;  }
@@ -64,6 +65,7 @@ namespace trigger {
     size_t _target_ch_start;
     size_t _target_ch_count;
 
+    unsigned int _trigger_bits;
     double _trigger_time;
     double _waveform_time;
 

@@ -2,6 +2,7 @@
 #define _DAQFILE_INTERFACE_CXX__
 
 #include "DAQFileInterface.h"
+#include "UtilFunc.h"
 #include "SWTriggerBase/TriggerException.h"
 #include <iostream>
 #include <iosfwd>
@@ -30,7 +31,7 @@ namespace trigger {
   double _trigger_time;
   double _waveform_time;
 
-  LiteStorageManager::LiteStorageManager()
+  DAQFileInterface::DAQFileInterface()
     : _event  (0)
     , _run    (0)
     , _subrun (0)
@@ -45,24 +46,24 @@ namespace trigger {
     , _is(nullptr)
   {}
 
-  void LiteStorageManager::SetTarget(size_t slot, size_t ch_start, size_t ch_count)
+  void DAQFileInterface::SetTarget(size_t slot, size_t ch_start, size_t ch_count)
   {
     if(slot < 4 || slot > 19) throw TriggerException("Invalid FEM slot number requested");
     if(ch_start > 32) throw TriggerException("Invalid FEM channel number requested");
     if((32 - ch_start) < ch_count) throw TriggerException("# channel requested exceeding 32 (from start channel number)!");
     _target_fem = slot;
-    _ch_start = ch_start;
-    _ch_count = ch_count;
+    _target_ch_start = ch_start;
+    _target_ch_count = ch_count;
     _wf_v.resize(ch_count);
   }
   
-  void LiteStorageManager::Reset()
+  void DAQFileInterface::Reset()
   {
     if(_is) delete _is;
     _is = nullptr;
   }
 
-  void LiteStorageManager::Initialize()
+  void DAQFileInterface::Initialize()
   {
     if(_current_input_index>=0)
       throw std::exception();
@@ -75,9 +76,11 @@ namespace trigger {
 
     ::peek_at_next_event<ub_PMT_CardData_v6>(false);
     ::handle_missing_words<ub_PMT_CardData_v6>(true);
+    ::peek_at_next_event<ub_TPC_CardData_v6>(false);
+    ::handle_missing_words<ub_TPC_CardData_v6>(true);
   }
 
-  bool LiteStorageManager::ProcessEvent()
+  bool DAQFileInterface::ProcessEvent()
   {
     if(_current_input_index < 0){
       std::cerr << "Initialize first!" << std::endl;
@@ -116,7 +119,7 @@ namespace trigger {
     return true;
   }
 
-  void LiteStorageManager::ProcessRecord(ub_EventRecord& eventRecord)
+  void DAQFileInterface::ProcessRecord(ub_EventRecord& eventRecord)
   {
     global_header_t const& globalHeader = eventRecord.getGlobalHeader();
 
@@ -164,7 +167,7 @@ namespace trigger {
 	double min_dt = 1.e12;
 	for(auto const& ch_data : card_data.getChannels()) {
 
-	  if( ch_data.getChannelNumber() != _ch_start )
+	  if( ch_data.getChannelNumber() != _target_ch_start )
 	    continue;
 
 	  auto const& window_v = ch_data.getWindows();
@@ -192,7 +195,7 @@ namespace trigger {
 
 	for(auto const& ch_data : card_data.getChannels()) {
 
-	  if( ch_data.getChannelNumber() < _ch_start || ch_data.getChannelNumber() >= _ch_start + _ch_count )
+	  if( ch_data.getChannelNumber() < _target_ch_start || ch_data.getChannelNumber() >= _target_ch_start + _target_ch_count )
 	    continue;
 
 	  auto const& window_v = ch_data.getWindows();
@@ -202,13 +205,16 @@ namespace trigger {
 	    
 	    if(window_data.size()<1000) continue;
 
-	    if(window_header.getFrame() != target_frame || ch_data.getSample() != target_sample) continue;
+	    if(window_header.getFrame() != target_frame || window_header.getSample() != target_sample) continue;
 
 	    auto& wf = _wf_v[ch_data.getChannelNumber()];
 
 	    wf.resize(window_data.size());
-	    for(size_t i=0; i<window_data.size(); ++i) { wf[i] = (0xfff & (window_data[i])); }
-            
+	    size_t i=0;
+	    for(auto const& adc : window_data) {
+	      wf[i] = (adc & 0xfff);
+	      ++i;
+	    }
 	  }
 	}
 	break;
