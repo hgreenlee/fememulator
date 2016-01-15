@@ -188,6 +188,9 @@ namespace trigger {
 	std::vector<short> tgth0;
 	std::vector<short> ttrig0;
 	std::vector<short> ttrig3;
+	ttrig0.reserve(100);
+	ttrig3.reserve(100);
+	tgth0.reserve(100);
 	
 	for (short tick=0; (tick+1)<(short)wfm.size(); tick++) {
 	  // discr0 must fire first: acts as pre-trigger. won't fire again until all discs are no longer active
