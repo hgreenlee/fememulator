@@ -111,10 +111,7 @@ namespace trigger {
       
       size_t wfmsize=0;
       for(auto const& wf : chwfms) {
-	if(!wfmsize) {
-	  wfmsize = wf.size();
-	  if( wfmsize < kMinBeamGateSize ) throw TriggerException("BeamGate size too short!");
-	}
+	if(!wfmsize) wfmsize = wf.size();
 	else if(wfmsize != wf.size())
 	  throw TriggerException("Waveform length unmatched!");
       }
