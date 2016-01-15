@@ -11,8 +11,14 @@ namespace trigger {
   const Result AlgoBase::Process(const WaveformArray_t& data)
   {
     if(!_configured) throw TriggerException("Must call Configure() before Process()!");
+    _watch.Start();
     return this->_Process_(data);
+    _time_profile  += _watch.WallTime();
+    ++_process_count;
   }
+
+  double AlgoBase::AverageProcessTime() const
+  { return _time_profile / _process_count; }
 
 }
 #endif

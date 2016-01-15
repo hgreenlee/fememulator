@@ -17,7 +17,7 @@
 #include <iostream>
 #include "ConfigHolder.h"
 #include "Result.h"
-
+#include "Watch.h"
 namespace trigger {
   /**
      \class AlgoBase
@@ -42,7 +42,7 @@ namespace trigger {
        set configuration parameter names.
     */
     AlgoBase(const std::string name="noname") : _cfg(name)
-    {}
+    {_time_profile = 0.;}
     
     /// Default destructor
     virtual ~AlgoBase(){}
@@ -58,6 +58,9 @@ namespace trigger {
 
     /// Run trigger algorithm
     const Result Process(const WaveformArray_t&);
+
+    /// Time profile report (average time of execution over history)
+    double AverageProcessTime() const;
     
   protected:
 
@@ -79,7 +82,12 @@ namespace trigger {
 
     /// Boolean to flag if AlgoBase::Configure is called or not
     bool _configured;
-    
+    /// Watch for simple profiling
+    trigger::Watch _watch;
+    /// Process time using trigger::Watch
+    double _time_profile;
+    /// Process counter
+    double _process_count;
   };
 }
 #endif
