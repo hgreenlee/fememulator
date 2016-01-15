@@ -280,6 +280,8 @@ namespace trigger {
       
       short winmaxmulti = 0;
       short winmaxdiff  = 0;
+      short maxmulti_attrig = 0;
+      short maxdiff_attrig = 0;
       int   fire_time   = -1;
       for (short tick=winstart; tick<=winend; tick++) {
 	auto const& maxdiff_ = _chdiff_sum[tick];
@@ -293,9 +295,12 @@ namespace trigger {
 	
 	if(fire_time < 0 &&
 	   maxdiff_  >= _fememu_cfg.fTriggerThresPHMAX &&
-	   nhit_     >= _fememu_cfg.fTriggerThresMult )
+	   nhit_     >= _fememu_cfg.fTriggerThresMult ) {
 	  
 	  fire_time = tick; // fire time should be related to trig0 firing.
+	  maxdiff_attrig = maxdiff_;
+	  maxmulti_attrig = nhit_;
+	}
 	
 	
 	if(debug()) std::cout << "    "
@@ -310,8 +315,8 @@ namespace trigger {
       
       // store results
       result.pass          = (fire_time >= 0);
-      result.amplitude     = winmaxdiff;
-      result.multiplicity  = winmaxmulti;
+      result.amplitude     = maxdiff_attrig;
+      result.multiplicity  = maxmulti_attrig;
       result.time          = fire_time;
       
       if(debug()) 
