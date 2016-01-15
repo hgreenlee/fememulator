@@ -17,7 +17,8 @@ namespace trigger {
 	
 	if ( wfm.ChannelNumber()>kMaxPMTChannel || wfm.size()<kMinBeamGateSize ) continue;
 	
-	chwfms.at( wfm.ChannelNumber() ) = wfm;
+	Waveform_t wf_subset(wfm.begin(),wfm.begin()+kMinBeamGateSize);
+	chwfms.at( wfm.ChannelNumber() ) = wf_subset;
 	nfilled++;
       }
       
@@ -33,6 +34,8 @@ namespace trigger {
       
       int nfilled = 0;
       for ( auto const& wfm : wfms ) {
+
+	if (wfm.module_address() != _FEMSlot) continue;
 	
 	if ( wfm.channel_number()>kMaxPMTChannel || wfm.size()<kMinBeamGateSize ) continue;
 	

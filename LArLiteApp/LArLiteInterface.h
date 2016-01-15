@@ -12,9 +12,9 @@ namespace trigger {
     class LLInterface : public trigger::fememu::FEMBeamTriggerAlgo {
     public:
       /// Default ctor
-      LLInterface() : trigger::fememu::FEMBeamTriggerAlgo() {}
+    LLInterface() : trigger::fememu::FEMBeamTriggerAlgo() { _FEMSlot = 5; }
       /// Config ctor
-      LLInterface(const FEMBeamTriggerConfig& cfg) : trigger::fememu::FEMBeamTriggerAlgo(cfg) {}
+    LLInterface(const FEMBeamTriggerConfig& cfg) : trigger::fememu::FEMBeamTriggerAlgo(cfg) {}
       /// Default dtor
       ~LLInterface(){}
       
@@ -23,6 +23,14 @@ namespace trigger {
       
       /// Add an interface type that accepts larlite::event_opdetwaveform
       const trigger::Result Emulate( const ::larlite::event_fifo& );
+
+      /// setter for FEM slot to be used when using FIFO data-product
+      void setFEMSlot(int slot) { _FEMSlot = slot; }
+
+    private:
+      
+      /// FEM slot to be used
+      int _FEMSlot;
       
     };
   }
