@@ -30,6 +30,6 @@ while 1:
     wf_v=k.WaveformArray()
 
     out = fememu.Process(wf_v)
-    print 'Run',k.run(),'SubRun',k.subrun(),'Event',k.event(),'Trigger time:',out.time
+    print 'Run',k.run(),'SubRun',k.subrun(),'Event',k.event(),'Trigger time:',out.time,'Process time',fememu.AverageProcessTime()
 
     
