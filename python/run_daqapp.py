@@ -22,7 +22,7 @@ k.Reset()
 for x in xrange(len(sys.argv)-2):
     print 'Input:',sys.argv[x+2]
     k.AddInputFile(sys.argv[x+2])
-k.SetTarget(4,0,32)
+k.SetTarget(5,0,32)
 k.Initialize()
 
 while 1:
