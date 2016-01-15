@@ -17,7 +17,10 @@ namespace trigger {
 	
 	if ( wfm.ChannelNumber()>kMaxPMTChannel || wfm.size()<kMinBeamGateSize ) continue;
 	
-	Waveform_t wf_subset(wfm.begin(),wfm.begin()+kMinBeamGateSize);
+	Waveform_t wf_subset(kMinBeamGateSize);
+	for (size_t i=0; i < kMinBeamGateSize; i++)
+	  wf_subset[i] = (unsigned short)wfm[i];
+
 	chwfms.at( wfm.ChannelNumber() ) = wf_subset;
 
 	nfilled++;
