@@ -6,12 +6,12 @@ namespace trigger {
   
   namespace fememu {
     
-    FEMBeamTriggerAlgo::FEMBeamTriggerAlgo()
-      : trigger::AlgoBase("FEMBeamTriggerAlgo")
+    FEMBeamTriggerAlgo::FEMBeamTriggerAlgo(const std::string name)
+      : trigger::AlgoBase(name)
     {DefineConfigParams();}
     
-    FEMBeamTriggerAlgo::FEMBeamTriggerAlgo(const FEMBeamTriggerConfig& cfg)
-      : trigger::AlgoBase("FEMBeamTriggerAlgo")
+    FEMBeamTriggerAlgo::FEMBeamTriggerAlgo(const FEMBeamTriggerConfig& cfg, const std::string name)
+      : trigger::AlgoBase(name)
       , _fememu_cfg(cfg)
     {
       DefineConfigParams();

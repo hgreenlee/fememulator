@@ -14,9 +14,9 @@ namespace trigger {
       
     public:
       /// Default ctor
-      FEMBeamTriggerAlgo();
+      FEMBeamTriggerAlgo(const std::string name="FEMBeamTriggerAlgo");
       /// Config ctor
-      FEMBeamTriggerAlgo(const FEMBeamTriggerConfig&);
+      FEMBeamTriggerAlgo(const FEMBeamTriggerConfig&, const std::string name="FEMBeamTriggerAlgo");
       /// Default dtor
       ~FEMBeamTriggerAlgo(){}
 
