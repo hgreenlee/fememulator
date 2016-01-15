@@ -134,7 +134,13 @@ namespace trigger {
       size_t disc3_min_tick = _fememu_cfg.fDiscr3WindowStart;
       size_t disc3_max_tick = _fememu_cfg.fDiscr3WindowStart + _fememu_cfg.fDiscr3WindowSize;
       if(disc3_max_tick > wfmsize) disc3_max_tick = wfmsize - 1;
-      
+
+      // we define an evaluation window: this is to save space and time allocating and calculating diff/accumulators
+      // we start the window 5 disc0 deadtimes before it to avoid edge problems
+      size_t evalwinsize = _fememu_cfg.fTriggerWindowSize + 5*_fememu_cfg.fDiscr0delay;
+      size_t evalwinstart = (size_t)std::max(_fememu_cfg.fTriggerWindowStart - 5*_fememu_cfg.fDiscr0delay, 0 );
+      size_t evalwinend = evalwinstart+evalwinsize;
+
       //
       // first calculate accumulators for each waveform
       //
@@ -148,14 +154,15 @@ namespace trigger {
 	wfm.resize(wfmsize);
 	for(auto& v : wfm) v = 0;
       }
-      
-      _chdiff_sum.resize(wfmsize);
-      _chhit_sum.resize(wfmsize);
+
+      // note we only allocate a vector 
+      _chdiff_sum.resize(evalwinsize);
+      _chhit_sum.resize(evalwinsize);
       for(auto& v : _chdiff_sum) v = 0;
       for(auto& v : _chhit_sum ) v = 0;
       
-      _diff0_array.resize(NChannels,Waveform_t(wfmsize,0));
-      _diff3_array.resize(NChannels,Waveform_t(wfmsize,0));
+      _diff0_array.resize(NChannels,Waveform_t(evalwinsize,0));
+      _diff3_array.resize(NChannels,Waveform_t(evalwinsize,0));
       
       for (size_t ch=0; ch<NChannels; ch++) {
 	
@@ -174,13 +181,13 @@ namespace trigger {
 	  diff3[tick] = wfm[tick]-wfm[tick-_fememu_cfg.fDiscr3delay];
 	*/
 	
-	for (short tick=0; (tick + _fememu_cfg.fDiscr0delay)<(short)wfm.size(); tick++) {
-	  diff0[tick] = std::max( wfm[tick+_fememu_cfg.fDiscr0delay] - wfm[tick], 0 );
-	  if(debug() && diff0[tick]>100) std::cout << "[fememu::emulate] diff0[" << tick << "]: " << diff0[tick] << std::endl;
+	for (short tick=evalwinstart; (tick + _fememu_cfg.fDiscr0delay)<std::min((short)evalwinend, (short)wfm.size()); tick++) {
+	  diff0[tick-evalwinstart] = std::max( wfm[tick+_fememu_cfg.fDiscr0delay] - wfm[tick], 0 );
+	  if(debug() && diff0[tick-evalwinstart]>100) std::cout << "[fememu::emulate] diff0[" << tick << "]: " << diff0[tick-evalwinstart] << std::endl;
 	}
-	for (short tick=0; (tick + _fememu_cfg.fDiscr3delay)<(short)wfm.size(); tick++) {
-	  diff3[tick] = std::max( wfm[tick+_fememu_cfg.fDiscr3delay] - wfm[tick], 0 );
-	  if(debug() && diff3[tick]>200) std::cout << "[fememu::emulate] diff3[" << tick << "]: " << diff3[tick] << std::endl;
+	for (short tick=evalwinstart; (tick + _fememu_cfg.fDiscr3delay)<std::min((short)evalwinend, (short)wfm.size()); tick++) {
+	  diff3[tick-evalwinstart] = std::max( wfm[tick+_fememu_cfg.fDiscr3delay] - wfm[tick], 0 );
+	  if(debug() && diff3[tick-evalwinstart]>200) std::cout << "[fememu::emulate] diff3[" << tick << "]: " << diff3[tick-evalwinstart] << std::endl;
 	}
 	if(debug()) std::cout << "[fememu::emulate] filled diffs for "  << ch << std::endl;
 	
@@ -189,10 +196,10 @@ namespace trigger {
 	std::vector<short> ttrig0;
 	std::vector<short> ttrig3;
 	
-	for (short tick=0; (tick+1)<(short)wfm.size(); tick++) {
+	for (short tick=evalwinstart; (tick+1)<std::min((short)evalwinend, (short)wfm.size()); tick++) {
 	  // discr0 must fire first: acts as pre-trigger. won't fire again until all discs are no longer active
 	  // In the firmware gth0 is different than edge0, which is what allows disc3
-	  if ( diff0[tick+1]>=_fememu_cfg.fDiscr0threshold && diff0[tick]<_fememu_cfg.fDiscr0threshold ) {
+	  if ( diff0[tick+1-evalwinstart]>=_fememu_cfg.fDiscr0threshold && diff0[tick-evalwinstart]<_fememu_cfg.fDiscr0threshold ) {
 	    if ( ( tgth0.size()==0 || tgth0.back() + _fememu_cfg.fDiscr0precount < tick+1 ) &&
 		 ( ttrig3.size()==0 || ttrig3.back() + _fememu_cfg.fDiscr3deadtime < tick+1 )
 		 ) {
@@ -212,7 +219,7 @@ namespace trigger {
 	  // triggered near the end of a waveform or not.
 	  // I consider the following only valid if the beam window is far enough from the edge of the beam
 	  // gate, if the Discr3width is not too big, and if Discr0deadtime == 0.
-	  if ( diff3[tick+1]>=_fememu_cfg.fDiscr3threshold && diff3[tick]<_fememu_cfg.fDiscr3threshold ) {
+	  if ( diff3[tick+1-evalwinstart]>=_fememu_cfg.fDiscr3threshold && diff3[tick-evalwinstart]<_fememu_cfg.fDiscr3threshold ) {
 	    // must be within discr0 prewindow and outside of past discr3 deadtime and inside beam spill window(s)
 	    if ( ( !ttrig0.empty() && tick+1 < _fememu_cfg.fDiscr0deadtime + ttrig0.back() ) &&
 		 (  ttrig3.empty() || ttrig3.back() + _fememu_cfg.fDiscr3deadtime < tick+1 ) &&
@@ -221,16 +228,16 @@ namespace trigger {
 	      ttrig3.push_back( tick+1 );
 	      if (debug()) std::cout << "[fememu::emulate] ttrig3 @ tick " << tick+1 << std::endl;
 	      // // find maxdiff
-	      short tmaxdiff = diff3[ttrig0.back()];//diff3[tick+1];
+	      short tmaxdiff = diff3[ttrig0.back()-evalwinstart];//diff3[tick+1];
 	      //short tend1 = std::min( (short)(tick+1+_fememu_cfg.fDiscr3width), (short)diff3.size() );
-	      short tend1 = std::min( (short)(ttrig0.back()+_fememu_cfg.fDiscr3width), (short)(diff3.size()-1));
+	      short tend1 = std::min( (short)(ttrig0.back()+_fememu_cfg.fDiscr3width), (short)(evalwinstart+diff3.size()-1));
 	      for (short t=ttrig0.back(); t<tend1; t++) {
-		if(diff3[t]>=diff3[t-1]) {
-		  tmaxdiff = diff3[t];
+		if(diff3[t-evalwinstart]>=diff3[t-evalwinstart-1]) {
+		  tmaxdiff = diff3[t-evalwinstart];
 		}
-		_chdiff[ch][ t+1 ] = tmaxdiff;
+		_chdiff[ch][ t+1-evalwinstart ] = tmaxdiff;
 		if(t-ttrig0.back()>=3) {
-		  _chhit[ch][ t ] = 1;
+		  _chhit[ch][ t-evalwinstart ] = 1;
 		}
 		//if ( tmaxdiff<diff3[t] )
 		//tmaxdiff = diff3[t];
@@ -255,16 +262,16 @@ namespace trigger {
       //
       // Fill sum vectors
       //
-      for(size_t tick=0; tick<wfmsize; ++tick) {
+      for(size_t tick=evalwinstart; tick<evalwinend; ++tick) {
 	
 	short phmax_sum = 0;
 	short mult_sum  = 0;
 	for(size_t ch=0; ch<NChannels; ++ch) {
-	  phmax_sum += _chdiff[ch][tick];
-	  mult_sum  += _chhit[ch][tick];
+	  phmax_sum += _chdiff[ch][tick-evalwinstart];
+	  mult_sum  += _chhit[ch][tick-evalwinend];
 	}
-	_chdiff_sum[tick] = phmax_sum;
-	_chhit_sum[tick]  = mult_sum;
+	_chdiff_sum[tick-evalwinend] = phmax_sum;
+	_chhit_sum[tick-evalwinend]  = mult_sum;
       }
       
       // Prepare output (initialize in a way less change in mem seg)
@@ -284,8 +291,8 @@ namespace trigger {
       short maxdiff_attrig = 0;
       int   fire_time   = -1;
       for (short tick=winstart; tick<=winend; tick++) {
-	auto const& maxdiff_ = _chdiff_sum[tick];
-	auto const& nhit_ = _chhit_sum[tick];
+	auto const& maxdiff_ = _chdiff_sum[tick-evalwinend];
+	auto const& nhit_ = _chhit_sum[tick-evalwinend];
 	
 	if ( winmaxdiff < maxdiff_ )
 	  winmaxdiff = maxdiff_;
