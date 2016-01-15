@@ -175,11 +175,11 @@ namespace trigger {
 	*/
 	
 	for (short tick=0; (tick + _fememu_cfg.fDiscr0delay)<(short)wfm.size(); tick++) {
-	  diff0[tick] = std::max( wfm[tick+_fememu_cfg.fDiscr0delay] - wfm[tick], 0 );
+	  diff0[tick] = (wfm[tick+_fememu_cfg.fDiscr0delay] > wfm[tick] ? wfm[tick+_fememu_cfg.fDiscr0delay] - wfm[tick] : 0 );
 	  if(debug() && diff0[tick]>100) std::cout << "[fememu::emulate] diff0[" << tick << "]: " << diff0[tick] << std::endl;
 	}
 	for (short tick=0; (tick + _fememu_cfg.fDiscr3delay)<(short)wfm.size(); tick++) {
-	  diff3[tick] = std::max( wfm[tick+_fememu_cfg.fDiscr3delay] - wfm[tick], 0 );
+	  diff3[tick] = (wfm[tick+_fememu_cfg.fDiscr3delay] > wfm[tick] ? wfm[tick+_fememu_cfg.fDiscr3delay] - wfm[tick] : 0 );
 	  if(debug() && diff3[tick]>200) std::cout << "[fememu::emulate] diff3[" << tick << "]: " << diff3[tick] << std::endl;
 	}
 	if(debug()) std::cout << "[fememu::emulate] filled diffs for "  << ch << std::endl;
