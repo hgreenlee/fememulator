@@ -16,8 +16,6 @@
 #include "datatypes/uboone_data_utils.h"
 //#include "datatypes/ub_EventRecord.h"
 
-#include <TString.h>
-
 namespace trigger {
 
   size_t _event;

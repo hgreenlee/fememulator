@@ -3,7 +3,6 @@
 
 #include "UtilFunc.h"
 #include <unistd.h>
-#include "TString.h"
 #include <iostream>
 namespace trigger {
 
@@ -36,29 +35,29 @@ namespace trigger {
     
       // Throw an exception if difference is exactly diff+1                                                    
       if ( (subject - ref) == diff+1 ) {
-	std::cerr<<"\033[93m<<ERROR>>\033[00m"<<Form(" Unexpected diff: ref=%d, subject=%d",ref,subject)<<std::endl;
+	std::cerr<<"\033[93m<<ERROR>>\033[00m"
+		 <<" Unexpected diff: ref=" << ref
+		 <<", subject=" << subject
+		 <<std::endl;
 	throw std::exception();
       }
 
       // Else we have to subtract (mask+1)                                                                     
-      else{
-	//std::cout<<Form("Correcting %d to %d",subject,(subject-(mask+1)))<<std::endl;                        
+      else
 	subject = subject - (mask + 1);
-      }
-    
     }
     // If subject is smaller than ref by a predefined diff value, inspect difference                           
     else if ( subject < ref && (ref - subject) > diff) {
     
       // Throw an exception if difference is exactly diff+1                                                    
       if ( (ref - subject) == diff+1 ) {
-	std::cerr<<"\033[93m<<ERROR>>\033[00m"<<Form(" Unexpected diff: ref=%d, subject=%d",ref,subject)<<std::endl;
+	std::cerr<<"\033[93m<<ERROR>>\033[00m"
+		 <<" Unexpected diff: ref=" << ref
+		 <<", subject=" << subject << std::endl;
 	throw std::exception();
       }
-      else{
-	//std::cout<<Form("Correcting %d to %d",subject,(subject + (mask+1)))<<std::endl;                      
+      else
 	subject = subject + (mask + 1);
-      }
     }
     return subject;
   }
