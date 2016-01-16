@@ -39,7 +39,7 @@ namespace trigger {
     ~DAQFileInterface(){ }
 
     void AddInputFile(const std::string fname) { _input_v.push_back(fname); }
-    void SetTarget(size_t slot, size_t ch_start, size_t ch_count);
+    void SetTarget(size_t slot, size_t ch_start, size_t ch_count, size_t window_size);
     void Reset();
     void Initialize();
     bool ProcessEvent();
@@ -54,13 +54,14 @@ namespace trigger {
 
   private:
 #ifndef __CINT__
-    void ProcessRecord(ub_EventRecord& eventRecord);
+    bool ProcessRecord(ub_EventRecord& eventRecord);
 #endif 
 
     size_t _event;
     size_t _run;
     size_t _subrun;
 
+    size_t _target_window_size;
     size_t _target_fem;
     size_t _target_ch_start;
     size_t _target_ch_count;
@@ -77,6 +78,7 @@ namespace trigger {
     ub_EventRecord* _eventRecord;
 #endif
     size_t _event_ctr;
+    size_t _event_ctr_per_file;
     std::string _outfile;
     // ::larlite::storage_manager _mgr;
     std::ifstream* _is;

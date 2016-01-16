@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import sys
 from fememu_pycfg import apply_config
 from ROOT import trigger
@@ -22,13 +23,11 @@ k.Reset()
 for x in xrange(len(sys.argv)-2):
     print 'Input:',sys.argv[x+2]
     k.AddInputFile(sys.argv[x+2])
-k.SetTarget(5,0,32)
+k.SetTarget(5,0,32,700)
 k.Initialize()
 
-while 1:
-    k.ProcessEvent()
+while k.ProcessEvent():
     wf_v=k.WaveformArray()
-
     out = fememu.Process(wf_v)
     print 'Run',k.run(),'SubRun',k.subrun(),'Event',k.event(),'Trigger time:',out.time,'Process time',fememu.AverageProcessTime()
 

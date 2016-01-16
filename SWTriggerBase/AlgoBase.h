@@ -41,8 +41,8 @@ namespace trigger {
        Constructor: this is where an algorithm should \n
        set configuration parameter names.
     */
-    AlgoBase(const std::string name="noname") : _cfg(name)
-    {_time_profile = 0.;}
+  AlgoBase(const std::string name="noname") 
+    : _cfg(name) , _time_profile(0) , _process_count(0) {}
     
     /// Default destructor
     virtual ~AlgoBase(){}
