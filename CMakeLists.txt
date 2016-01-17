@@ -15,7 +15,7 @@ IF(USE_ROOT)
   execute_process(COMMAND root-config --libs 
 		  OUTPUT_VARIABLE ROOT_LIB 
 		  OUTPUT_STRIP_TRAILING_WHITESPACE)
-  execute_process(COMMAND python -c "import ROOT;print (int(ROOT.gSystem.GetVersion()[0]) == 6)" 
+  execute_process(COMMAND python -c "import ROOT;print (int(ROOT.gROOT.GetVersion()[0]) == 6)" 
   		  OUTPUT_VARIABLE ROOT6 
 		  OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
   IF(${ROOT6})
