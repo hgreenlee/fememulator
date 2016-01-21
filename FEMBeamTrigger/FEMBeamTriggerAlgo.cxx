@@ -314,7 +314,7 @@ namespace trigger {
       }
       
       // store results
-      result.pass          = (fire_time >= 0);
+      result.pass_algo     = (fire_time >= 0);
       result.amplitude     = maxdiff_attrig;
       result.multiplicity  = maxmulti_attrig;
       result.time          = fire_time;

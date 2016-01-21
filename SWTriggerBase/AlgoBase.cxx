@@ -12,7 +12,9 @@ namespace trigger {
   {
     if(!_configured) throw TriggerException("Must call Configure() before Process()!");
     _watch.Start();
-    auto const res = this->_Process_(data);
+    auto res = this->_Process_(data);
+    res.pass_prescale = prescaleTrig();
+    res.pass = res.pass_prescale | res.pass_algo;
     _time_profile  += _watch.WallTime();
     ++_process_count;
     return res;
@@ -20,6 +22,18 @@ namespace trigger {
 
   double AlgoBase::AverageProcessTime() const
   { return _time_profile / _process_count; }
+
+  bool AlgoBase::prescaleTrig() {
+    int prescale_factor = _cfg.Get<int>("PrescaleFactor");
+    if ( prescale_factor<1 )
+      throw TriggerException("PrescaleFactor in configuration must be >=1!");
+    float border = 1.0/float(prescale_factor);
+    std::mt19937::result_type seed = time(0);
+    auto real_rand = std::bind(std::uniform_real_distribution<float>(0,1),std::mt19937(seed));
+    if ( real_rand() < border ) return true;
+    else return false;
+  }
+			      
 
 }
 #endif

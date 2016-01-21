@@ -15,6 +15,9 @@
 #define ALGOBASE_H
 
 #include <iostream>
+#include <random>
+#include <ctime>
+
 #include "ConfigHolder.h"
 #include "Result.h"
 #include "Watch.h"
@@ -88,6 +91,11 @@ namespace trigger {
     double _time_profile;
     /// Process counter
     double _process_count;
+
+    /// Prescale calculator
+    //std::mt19937 _mt_rand;
+    bool prescaleTrig(); ///< bool true if passed pre-scale
+
   };
 }
 #endif
