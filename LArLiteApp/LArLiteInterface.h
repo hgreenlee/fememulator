@@ -12,9 +12,9 @@ namespace trigger {
     class LLInterface : public trigger::fememu::FEMBeamTriggerAlgo {
     public:
       /// Default ctor
-    LLInterface() : trigger::fememu::FEMBeamTriggerAlgo() { _FEMSlot = 5; }
+      LLInterface() : trigger::fememu::FEMBeamTriggerAlgo() { _FEMSlot = 5; }
       /// Config ctor
-    LLInterface(const FEMBeamTriggerConfig& cfg) : trigger::fememu::FEMBeamTriggerAlgo(cfg) {}
+      LLInterface(const FEMBeamTriggerConfig& cfg) : trigger::fememu::FEMBeamTriggerAlgo(cfg) {}
       /// Default dtor
       ~LLInterface(){}
       

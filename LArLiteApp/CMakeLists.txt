@@ -43,12 +43,12 @@ IF(USE_ROOT)
   ENDIF()
   include_directories(${ROOT_INCDIR})
   add_library(FEMBeamTrigger_LArLiteInterface SHARED ${SOURCES} ${CMAKE_CURRENT_BINARY_DIR}/${DICT_NAME}.cxx)
-  target_link_libraries(FEMBeamTrigger_LArLiteInterface SWTriggerBase ${ROOT_LIB} ${LARLITE_LIB} )
+  target_link_libraries(FEMBeamTrigger_LArLiteInterface SWTriggerBase FEMBeamTrigger ${ROOT_LIB} ${LARLITE_LIB} )
   set_directory_properties( PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${DAQ_TRIGGER_ALGO_LIBDIR}/libFEMBeamTrigger_LArLiteInterface.rootmap" )
 ELSE()
 
   add_library(FEMBeamTrigger_LArLiteInterface SHARED ${SOURCES} )
-  target_link_libraries(FEMBeamTrigger_LArLiteInterface SWTriggerBase)
+  target_link_libraries(FEMBeamTrigger_LArLiteInterface SWTriggerBase FEMBeamTrigger)
 ENDIF()
 
 # Set include dirs
