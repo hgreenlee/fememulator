@@ -38,7 +38,7 @@ namespace trigger {
        Constructor: this is where an algorithm should \n
        set configuration parameter names.
     */
-    MultiAlgo() {};
+    MultiAlgo();
     
     /// Default destructor
     virtual ~MultiAlgo();
@@ -54,11 +54,20 @@ namespace trigger {
     /// Run trigger algorithms
     const ResultArray Process( unsigned int trigbit, const WaveformArray_t&);
 
+    /// Process time getter
+    double AverageProcessTime() const;
+
   protected:
 
     // map of algos assigned to each bit
     std::map< unsigned int, int > _trigbit_to_index; // [bit,index]
     std::map< std::string, int > _name_to_index;
+    /// Process time using trigger::Watch
+    double _time_profile;
+    /// Process counter
+    double _process_count;
+    /// Watch for simple profiling
+    trigger::Watch _watch;
 
   };
 }
