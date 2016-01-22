@@ -1,0 +1,117 @@
+software_trg: {
+    swtrg_algorithms : [0,1,2,3,4,5,6]
+    swtrg_algonames  : ["swtrg_bnb”,"prescale_bnb","swtrig_numi","prescale_numi","swtrig_ext_bnb","swtrig_ext_numi","prescale_ext"]
+    swtrg_algotype  : ["FEMBeamTriggerAlgo","PrescaleAlgo","FEMBeamTriggerAlgo","PrescaleAlgo","FEMBeamTriggerAlgo","FEMBeamTriggerAlgo","PrescaleAlgo"]
+    swtrg_bits       : [0x800,0x800,0x1000,0x1000,0x200,0x200,0x200]
+    swtrg_beam_window_size : 600
+    drop_event       : false
+    swtrg_bnb : {
+      # Verbosity
+      Verbosity        : 3
+      # Needed min length of waveform
+      MinReadoutTicks  : 500
+      # Discriminator 0 settings
+      Discr0precount   : 1
+      Discr0delay      : 4
+      Discr0threshold  : 5
+      Discr0deadtime   : 6
+      # Discriminator 3 settings
+      Discr3delay      : 4
+      Discr3threshold  : 10
+      Discr3deadtime   : 6
+      Discr3width      : 6
+      # Trigger window settings
+      Discr3WindowStart : 54
+      Discr3WindowSize  : 105
+      TriggerThresMult  : 1
+      TriggerThresPHMAX : 70
+      TriggerWindowStart : 57
+      TriggerWindowSize  : 104
+      # Prescale Factor
+      PrescaleFactor: 1
+    }
+    prescale_bnb: {
+      PrescaleFactor: 10
+    }
+    swtrg_numi : {
+      # Verbosity
+      Verbosity        : 3
+      # Needed min length of waveform
+      MinReadoutTicks  : 500
+      # Discriminator 0 settings
+      Discr0precount   : 1
+      Discr0delay      : 4
+      Discr0threshold  : 5
+      Discr0deadtime   : 6
+      # Discriminator 3 settings
+      Discr3delay      : 4
+      Discr3threshold  : 10
+      Discr3deadtime   : 6
+      Discr3width      : 6
+      # Trigger window settings
+      Discr3WindowStart : 54
+      Discr3WindowSize  : 105
+      TriggerThresMult  : 1
+      TriggerThresPHMAX : 130
+      TriggerWindowStart : 57
+      TriggerWindowSize  : 615
+      # Prescale Factor
+      PrescaleFactor: 1
+  }
+  prescale_numi: {
+      PrescaleFactor: 10
+  }
+  swtrg_ext_bnb : {
+      # Verbosity
+      Verbosity        : 3
+      # Needed min length of waveform
+      MinReadoutTicks  : 500
+      # Discriminator 0 settings
+      Discr0precount   : 1
+      Discr0delay      : 4
+      Discr0threshold  : 5
+      Discr0deadtime   : 6
+      # Discriminator 3 settings
+      Discr3delay      : 4
+      Discr3threshold  : 10
+      Discr3deadtime   : 6
+      Discr3width      : 6
+      # Trigger window settings
+      Discr3WindowStart : 54
+      Discr3WindowSize  : 105
+      TriggerThresMult  : 1
+      TriggerThresPHMAX : 70
+      TriggerWindowStart : 57
+      TriggerWindowSize  : 104
+      # Prescale Factor
+      PrescaleFactor: 1
+  }
+  swtrg_ext_numi : {
+      # Verbosity
+      Verbosity        : 3
+      # Needed min length of waveform
+      MinReadoutTicks  : 500
+      # Discriminator 0 settings
+      Discr0precount   : 1
+      Discr0delay      : 4
+      Discr0threshold  : 5
+      Discr0deadtime   : 6
+      # Discriminator 3 settings
+      Discr3delay      : 4
+      Discr3threshold  : 10
+      Discr3deadtime   : 6
+      Discr3width      : 6
+      # Trigger window settings
+      Discr3WindowStart : 54
+      Discr3WindowSize  : 105
+      TriggerThresMult  : 1
+      TriggerThresPHMAX : 70
+      TriggerWindowStart : 57
+      TriggerWindowSize  : 614
+      # Prescale Factor
+      PrescaleFactor: 1
+  }
+  prescale_ext : {
+      PrescaleFactor: 5
+  }
+}

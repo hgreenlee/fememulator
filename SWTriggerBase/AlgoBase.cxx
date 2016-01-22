@@ -20,15 +20,9 @@ namespace trigger {
     auto res = this->_Process_(triggerbit, data);
     res.algo_instance_name = this->Name();
     res.pass_prescale = prescaleTrig();
-    res.pass = res.pass_prescale | res.pass_algo; // pass is an OR of pre-scale and algo result
-    if ( res.pass_algo ) {
-      // passes the algo. weight as 1
-      res.prescale_weight = 1.0;
-    }
-    else {
-      // weight up event if (!pass_algo & pass_prescale)
-      res.prescale_weight = (float)_prescale_factor;
-    }
+    res.pass = res.pass_prescale && res.pass_algo; // pass is an AND of pre-scale and algo result
+    res.prescale_weight = (float)_prescale_factor;
+
     _time_profile  += _watch.WallTime();
     ++_process_count;
     return res;
