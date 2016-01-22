@@ -56,8 +56,13 @@ namespace trigger {
 
   class ResultArray : public std::vector<Result> {
   public:
-    ResultArray() {};
+  ResultArray() 
+    : passedone (0),
+      passedall (0)
+	{};
     virtual ~ResultArray() {};
+    bool passedone;
+    bool passedall;
   };
 }
   
