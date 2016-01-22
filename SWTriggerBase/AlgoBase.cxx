@@ -19,7 +19,6 @@ namespace trigger {
     _watch.Start();
     auto res = this->_Process_(triggerbit, data);
     res.algo_instance_name = this->Name();
-    res.hwtrigbit = triggerbit;
     res.pass_prescale = prescaleTrig();
     res.pass = res.pass_prescale | res.pass_algo; // pass is an OR of pre-scale and algo result
     if ( res.pass_algo ) {

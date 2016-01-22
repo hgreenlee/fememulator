@@ -37,7 +37,6 @@ namespace trigger {
       , multiplicity (  0 )
       , time         ( -1 )
       , algo_instance_name( "" )
-      , hwtrigbit    ( 0 )
     {}
     
     /// Default destructor
@@ -51,7 +50,7 @@ namespace trigger {
     int   time;         ///< Trigger decision times (-1 means not fired)
     float prescale_weight;       ///< same weight due to prescale
     std::string algo_instance_name;
-    unsigned int hwtrigbit;
+    //unsigned int hwtrigbit;
     
   };
 
