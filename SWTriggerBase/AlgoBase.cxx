@@ -18,6 +18,8 @@ namespace trigger {
     if(!_configured) throw TriggerException("Must call Configure() before Process()!");
     _watch.Start();
     auto res = this->_Process_(triggerbit, data);
+    res.algoname = this->Name();
+    res.trigbit = triggerbit;
     res.pass_prescale = prescaleTrig();
     res.pass = res.pass_prescale | res.pass_algo;
     if ( res.pass_algo ) {

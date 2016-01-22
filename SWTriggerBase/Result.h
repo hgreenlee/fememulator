@@ -50,6 +50,8 @@ namespace trigger {
     int   time;         ///< Trigger decision times (-1 means not fired)
     int   prescale_factor; ///< keep event 1/prescale_factor events
     float weight;       ///< same as prescale factor
+    std::string algoname;
+    unsigned int trigbit;
     
   };
 
