@@ -36,11 +36,15 @@ namespace trigger {
     auto it=_trigbit_to_index.begin();
 
     ResultArray results;
+    results.passedone = false;
+    results.passedall = true;
 
     for ( auto it=_trigbit_to_index.begin(); it!=_trigbit_to_index.end(); it++) {
       
       if ( trigbit & (*it).first ) {
 	Result res = (*this).at( (*it).second )->Process( trigbit, wfms );
+	results.passedone = results.passedone || res.pass;
+	results.passedall = results.passedall && res.pass;
 	results.emplace_back(res);
       }
 
