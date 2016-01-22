@@ -12,6 +12,12 @@ namespace trigger {
   }
 
   void MultiAlgo::declareAlgo( unsigned int trigbit, std::string algotype_name, std::string algoinstance_name ) {
+    auto it = _name_to_index.find( algoinstance_name );
+    if ( it!=_name_to_index.end() ) {
+      char oops[500];
+      sprintf(oops,"Already declared a trigger with the name '%s'. Duplicate instance names are forbidden!",algoinstance_name.c_str());
+      throw TriggerException(oops);
+    }
     (*this).push_back( AlgoBase::create( algotype_name, algoinstance_name ) );
     int index = (*this).size()-1;
     _trigbit_to_index[trigbit] = index;
