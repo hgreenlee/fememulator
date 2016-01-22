@@ -31,6 +31,8 @@ namespace trigger {
       : pass         (  0 )
       , pass_algo    (  0 )
       , pass_prescale(  0 )
+      , weight (1.0)
+      , prescale_factor(1)
       , amplitude    (  0 )
       , multiplicity (  0 )
       , time         ( -1 )
@@ -45,6 +47,8 @@ namespace trigger {
     short amplitude;    ///< PHMAX sum
     short multiplicity; ///< Multiplicity sum
     int   time;         ///< Trigger decision times (-1 means not fired)
+    int   prescale_factor; ///< keep event 1/prescale_factor events
+    float weight;       ///< same as prescale factor
     
   };
 }

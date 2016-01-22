@@ -15,6 +15,16 @@ namespace trigger {
     auto res = this->_Process_(data);
     res.pass_prescale = prescaleTrig();
     res.pass = res.pass_prescale | res.pass_algo;
+    if ( res.pass_algo ) {
+      // passes the algo. weight as 1
+      res.prescale_factor = 1;
+      res.weight = 1.0;
+    }
+    else {
+      // weight up event if (!pass_algo & pass_prescale
+      res.prescale_factor = _cfg.Get<int>("PrescaleFactor");
+      res.weight = (float)res.prescale_factor;
+    }
     _time_profile  += _watch.WallTime();
     ++_process_count;
     return res;
