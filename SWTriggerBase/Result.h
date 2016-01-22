@@ -32,11 +32,12 @@ namespace trigger {
       : pass         (  0 )
       , pass_algo    (  0 )
       , pass_prescale(  0 )
-      , weight (1.0)
-      , prescale_factor(1)
+      , prescale_weight (1.0)
       , amplitude    (  0 )
       , multiplicity (  0 )
       , time         ( -1 )
+      , algo_instance_name( "" )
+      , hwtrigbit    ( 0 )
     {}
     
     /// Default destructor
@@ -48,10 +49,9 @@ namespace trigger {
     short amplitude;    ///< PHMAX sum
     short multiplicity; ///< Multiplicity sum
     int   time;         ///< Trigger decision times (-1 means not fired)
-    int   prescale_factor; ///< keep event 1/prescale_factor events
-    float weight;       ///< same as prescale factor
-    std::string algoname;
-    unsigned int trigbit;
+    float prescale_weight;       ///< same weight due to prescale
+    std::string algo_instance_name;
+    unsigned int hwtrigbit;
     
   };
 

@@ -18,19 +18,17 @@ namespace trigger {
     if(!_configured) throw TriggerException("Must call Configure() before Process()!");
     _watch.Start();
     auto res = this->_Process_(triggerbit, data);
-    res.algoname = this->Name();
-    res.trigbit = triggerbit;
+    res.algo_instance_name = this->Name();
+    res.hwtrigbit = triggerbit;
     res.pass_prescale = prescaleTrig();
-    res.pass = res.pass_prescale | res.pass_algo;
+    res.pass = res.pass_prescale | res.pass_algo; // pass is an OR of pre-scale and algo result
     if ( res.pass_algo ) {
       // passes the algo. weight as 1
-      res.prescale_factor = 1;
-      res.weight = 1.0;
+      res.prescale_weight = 1.0;
     }
     else {
-      // weight up event if (!pass_algo & pass_prescale
-      res.prescale_factor = _prescale_factor;
-      res.weight = (float)res.prescale_factor;
+      // weight up event if (!pass_algo & pass_prescale)
+      res.prescale_weight = (float)_prescale_factor;
     }
     _time_profile  += _watch.WallTime();
     ++_process_count;
