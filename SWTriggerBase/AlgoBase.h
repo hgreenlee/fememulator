@@ -92,6 +92,9 @@ namespace trigger {
     /// Process counter
     double _process_count;
 
+    /// prescale factor
+    int _prescale_factor;
+
     /// Prescale calculator
     //std::mt19937 _mt_rand;
     bool prescaleTrig(); ///< bool true if passed pre-scale

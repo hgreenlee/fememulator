@@ -6,7 +6,7 @@
 namespace trigger {
 
   void AlgoBase::Configure()
-  { this->_Configure_(); _configured = true; }
+  { this->_Configure_(); _configured = true; _prescale_factor = _cfg.Get<int>("PrescaleFactor"); }
 
   const Result AlgoBase::Process(const WaveformArray_t& data)
   {
@@ -22,7 +22,7 @@ namespace trigger {
     }
     else {
       // weight up event if (!pass_algo & pass_prescale
-      res.prescale_factor = _cfg.Get<int>("PrescaleFactor");
+      res.prescale_factor = _prescale_factor;
       res.weight = (float)res.prescale_factor;
     }
     _time_profile  += _watch.WallTime();
@@ -34,10 +34,9 @@ namespace trigger {
   { return _time_profile / _process_count; }
 
   bool AlgoBase::prescaleTrig() {
-    int prescale_factor = _cfg.Get<int>("PrescaleFactor");
-    if ( prescale_factor<1 )
+    if ( _prescale_factor<1 )
       throw TriggerException("PrescaleFactor in configuration must be >=1!");
-    float border = 1.0/float(prescale_factor);
+    float border = 1.0/float(_prescale_factor);
     std::mt19937::result_type seed = time(0);
     auto real_rand = std::bind(std::uniform_real_distribution<float>(0,1),std::mt19937(seed));
     if ( real_rand() < border ) return true;
