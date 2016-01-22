@@ -3,6 +3,7 @@
 
 #include <random>
 #include <ctime>
+#include <functional>
 
 #include "AlgoBase.h"
 
