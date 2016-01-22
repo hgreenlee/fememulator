@@ -32,10 +32,10 @@ namespace trigger {
       : pass         (  0 )
       , pass_algo    (  0 )
       , pass_prescale(  0 )
-      , prescale_weight (1.0)
       , amplitude    (  0 )
       , multiplicity (  0 )
       , time         ( -1 )
+      , prescale_weight (1.0)
       , algo_instance_name( "" )
     {}
     
