@@ -4,6 +4,7 @@
 #include <vector>
 #include "SWTriggerBase/SWTriggerTypes.h"
 #include "SWTriggerBase/AlgoBase.h"
+#include "SWTriggerBase/AlgoFactory.h"
 #include "FEMBeamTriggerTypes.h"
 
 namespace trigger {
@@ -44,7 +45,7 @@ namespace trigger {
       void _Configure_();
       
       /// AlgoBase::_Process_() implementation
-      const trigger::Result _Process_( const WaveformArray_t& );
+      const trigger::Result _Process_( unsigned int triggerbit, const WaveformArray_t& );
       
     private:
 
@@ -71,6 +72,18 @@ namespace trigger {
       inline bool normal  () const { return _fememu_cfg.fVerbosity <= kNORMAL;  }
       inline bool warning () const { return _fememu_cfg.fVerbosity <= kWARNING; }
       inline bool error   () const { return _fememu_cfg.fVerbosity <= kERROR;   }
+    };
+
+    
+    class FEMBeamTriggerAlgoFactory : public ::trigger::AlgoFactory {
+    public:
+      FEMBeamTriggerAlgoFactory() {
+	AlgoBase::registerConcreteFactory( "FEMBeamTriggerAlgo",this );
+      };
+      virtual ~FEMBeamTriggerAlgoFactory() {};
+      virtual AlgoBase* create(std::string algoinstance_name) {
+	return new FEMBeamTriggerAlgo(algoinstance_name);
+      };
     };
   }
 }

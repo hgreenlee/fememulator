@@ -1,18 +1,23 @@
 #ifndef ALGOBASE_CXX
 #define ALGOBASE_CXX
 
+#include <random>
+#include <ctime>
+
 #include "AlgoBase.h"
 
 namespace trigger {
 
+  std::map< std::string, AlgoFactory* > AlgoBase::_factories;
+
   void AlgoBase::Configure()
   { this->_Configure_(); _configured = true; _prescale_factor = _cfg.Get<int>("PrescaleFactor"); }
 
-  const Result AlgoBase::Process(const WaveformArray_t& data)
+  const Result AlgoBase::Process(unsigned int triggerbit, const WaveformArray_t& data)
   {
     if(!_configured) throw TriggerException("Must call Configure() before Process()!");
     _watch.Start();
-    auto res = this->_Process_(data);
+    auto res = this->_Process_(triggerbit, data);
     res.pass_prescale = prescaleTrig();
     res.pass = res.pass_prescale | res.pass_algo;
     if ( res.pass_algo ) {

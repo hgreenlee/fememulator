@@ -15,12 +15,14 @@
 #define ALGOBASE_H
 
 #include <iostream>
-#include <random>
-#include <ctime>
+#include <string>
+#include <map>
 
 #include "ConfigHolder.h"
 #include "Result.h"
 #include "Watch.h"
+#include "AlgoFactory.h"
+
 namespace trigger {
   /**
      \class AlgoBase
@@ -60,7 +62,7 @@ namespace trigger {
     void Configure();
 
     /// Run trigger algorithm
-    const Result Process(const WaveformArray_t&);
+    const Result Process(unsigned int triggerbit, const WaveformArray_t&);
 
     /// Time profile report (average time of execution over history)
     double AverageProcessTime() const;
@@ -76,7 +78,7 @@ namespace trigger {
     virtual void _Configure_() = 0;
 
     /// virtual function to run trigger algorithm and share result
-    virtual const Result _Process_(const WaveformArray_t&) = 0;
+    virtual const Result _Process_(unsigned int triggerbit, const WaveformArray_t&) = 0;
 
     /// Algorithm configuration
     ConfigHolder _cfg;
@@ -96,9 +98,28 @@ namespace trigger {
     int _prescale_factor;
 
     /// Prescale calculator
-    //std::mt19937 _mt_rand;
     bool prescaleTrig(); ///< bool true if passed pre-scale
 
+    /// ----------------
+    /// abstract factory stuff
+
+    
+  private:
+    static std::map< std::string, AlgoFactory* > _factories;
+  public:
+    static void registerConcreteFactory( const std::string& name, AlgoFactory* factory ) {
+      _factories[ name ] = factory;
+    };
+    static AlgoBase* create( std::string algotype_name, std::string algoinstance_name ) {
+      std::map< std::string, AlgoFactory* >::iterator it=_factories.find(algotype_name);
+      if ( it==_factories.end() ) {
+	char oops[500];
+	sprintf(oops,"Algo type with name '%s' has not been registered.", algotype_name.c_str() );
+	throw TriggerException(oops);
+      }
+      return (*it).second->create(algoinstance_name);
+    };
+    
   };
 }
 #endif

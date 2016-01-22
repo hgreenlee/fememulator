@@ -98,7 +98,7 @@ namespace trigger {
       return _chdiff[ch];
     }
     
-    const ::trigger::Result FEMBeamTriggerAlgo::_Process_( const WaveformArray_t& chwfms )
+    const ::trigger::Result FEMBeamTriggerAlgo::_Process_( unsigned int triggerbit, const WaveformArray_t& chwfms )
     {
       if(debug()) std::cout << __PRETTY_FUNCTION__ << std::endl;
       

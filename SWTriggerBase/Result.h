@@ -15,6 +15,7 @@
 #define __TRIGGER_RESULT_H__
 
 #include <iostream>
+#include <vector>
 
 namespace trigger {
   /**
@@ -50,6 +51,12 @@ namespace trigger {
     int   prescale_factor; ///< keep event 1/prescale_factor events
     float weight;       ///< same as prescale factor
     
+  };
+
+  class Results : public std::vector<Result> {
+  public:
+    Results() {};
+    virtual ~Results() {};
   };
 }
   
