@@ -55,10 +55,10 @@ namespace trigger {
     
   };
 
-  class Results : public std::vector<Result> {
+  class ResultArray : public std::vector<Result> {
   public:
-    Results() {};
-    virtual ~Results() {};
+    ResultArray() {};
+    virtual ~ResultArray() {};
   };
 }
   

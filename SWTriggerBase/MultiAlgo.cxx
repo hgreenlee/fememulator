@@ -32,21 +32,21 @@ namespace trigger {
     return GetAlgo( instance_name ).GetConfig();
   }
 
-  const Results MultiAlgo::Process( unsigned int trigbit, const WaveformArray_t& wfms) {
+  const ResultArray MultiAlgo::Process( unsigned int trigbit, const WaveformArray_t& wfms) {
     auto it=_trigbit_to_index.begin();
 
-    Results out;
+    ResultArray results;
 
     for ( auto it=_trigbit_to_index.begin(); it!=_trigbit_to_index.end(); it++) {
       
       if ( trigbit & (*it).first ) {
 	Result res = (*this).at( (*it).second )->Process( trigbit, wfms );
-	out.emplace_back(res);
+	results.emplace_back(res);
       }
 
     }
 
-    return out;
+    return results;
   }
 
 }

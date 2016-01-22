@@ -52,7 +52,7 @@ namespace trigger {
     AlgoBase& GetAlgo( std::string algoinstance_name );
 
     /// Run trigger algorithms
-    const Results Process( unsigned int trigbit, const WaveformArray_t&);
+    const ResultArray Process( unsigned int trigbit, const WaveformArray_t&);
 
   protected:
 
