@@ -119,6 +119,11 @@ namespace trigger {
       }
       return (*it).second->create(algoinstance_name);
     };
+    static void listAlgoTypes() {
+      std::cout << "[AlgoFactories]" << std::endl;
+      for ( auto it=_factories.begin(); it!=_factories.end(); it++ )
+	std::cout << "  " << (*it).first << std::endl;
+    };
     
   };
 }

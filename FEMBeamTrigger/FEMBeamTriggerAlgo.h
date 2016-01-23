@@ -85,6 +85,8 @@ namespace trigger {
 	return new FEMBeamTriggerAlgo(algoinstance_name);
       };
     };
+
+    static FEMBeamTriggerAlgoFactory __global_FEMBeamTriggerAlgoFactory__;
   }
 }
 
