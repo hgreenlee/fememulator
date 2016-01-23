@@ -5,6 +5,11 @@
 
 namespace trigger {
 
+  MultiAlgo::MultiAlgo()
+    : _time_profile(0)
+    , _process_count(0)
+  {}
+
   MultiAlgo::~MultiAlgo() {
     for (auto it=(*this).begin(); it!=(*this).end(); it++) {
       delete (*it);
@@ -45,19 +50,25 @@ namespace trigger {
     results.passedone = false;
     results.passedall = true;
 
+    _watch.Start();
+    
     for ( auto it=_trigbit_to_index.begin(); it!=_trigbit_to_index.end(); it++) {
-      
       if ( trigbit & (*it).first ) {
 	Result res = (*this).at( (*it).second )->Process( trigbit, wfms );
 	results.passedone = results.passedone || res.pass;
 	results.passedall = results.passedall && res.pass;
 	results.emplace_back(res);
       }
-
     }
+
+    _time_profile  += _watch.WallTime();
+    ++_process_count;
 
     return results;
   }
+
+  double MultiAlgo::AverageProcessTime() const
+  { return _time_profile / _process_count; }
 
 }
 #endif
