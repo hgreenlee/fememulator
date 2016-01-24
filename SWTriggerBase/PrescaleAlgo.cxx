@@ -10,7 +10,7 @@ namespace trigger {
   const Result PrescaleAlgo::_Process_( unsigned int triggerbit, const WaveformArray_t& chwfms )
   {
     Result res;
-    res.pass = true;
+    res.pass_algo = true;
     // this class does nothing but pass.
     // if a prescale was set, the algobase will handle that
     return res;

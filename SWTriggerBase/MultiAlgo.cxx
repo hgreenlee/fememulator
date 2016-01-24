@@ -25,7 +25,7 @@ namespace trigger {
     }
     (*this).push_back( AlgoBase::create( algotype_name, algoinstance_name ) );
     int index = (*this).size()-1;
-    _trigbit_to_index[trigbit] = index;
+    _trigbit_to_index[trigbit].push_back( index );
     _name_to_index[algoinstance_name] = index;
   }
 
@@ -43,6 +43,12 @@ namespace trigger {
     return GetAlgo( instance_name ).GetConfig();
   }
 
+  void MultiAlgo::Configure() {
+    for ( auto it=(*this).begin(); it!=(*this).end(); it++) {
+      (*it)->Configure();
+    }
+  }
+
   const ResultArray MultiAlgo::Process( unsigned int trigbit, const WaveformArray_t& wfms) {
     auto it=_trigbit_to_index.begin();
 
@@ -54,13 +60,17 @@ namespace trigger {
     
     for ( auto it=_trigbit_to_index.begin(); it!=_trigbit_to_index.end(); it++) {
       if ( trigbit & (*it).first ) {
-	Result res = (*this).at( (*it).second )->Process( trigbit, wfms );
-	results.passedone = results.passedone || res.pass;
-	results.passedall = results.passedall && res.pass;
-	results.emplace_back(res);
+	// loop through all algs that are to be run with this bit
+	for ( auto it_alg=(*it).second.begin(); it_alg!=(*it).second.end(); it_alg++) {
+	  Result res = (*this).at( (*it_alg) )->Process( trigbit, wfms );
+	  //std::cout << "Ran " << (*this).at( (*it_alg) )->Name() << " hwbit=" << trigbit << " algo=" << res.pass_algo << " prescale=" << res.pass_prescale << std::endl;
+	  results.passedone = (results.passedone || res.pass);
+	  results.passedall = (results.passedall & res.pass);
+	  results.emplace_back(res);
+	}
       }
     }
-
+    
     _time_profile  += _watch.WallTime();
     ++_process_count;
 

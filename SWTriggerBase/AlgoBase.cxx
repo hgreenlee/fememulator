@@ -3,6 +3,7 @@
 
 #include <random>
 #include <ctime>
+#include <iostream>
 #include <functional>
 #include "AlgoBase.h"
 
@@ -11,7 +12,12 @@ namespace trigger {
   std::map< std::string, AlgoFactory* > AlgoBase::_factories;
 
   void AlgoBase::Configure()
-  { this->_Configure_(); _configured = true; _prescale_factor = _cfg.Get<int>("PrescaleFactor"); }
+  { 
+    this->_Configure_(); 
+    _configured = true; 
+    _prescale_factor = _cfg.Get<int>("PrescaleFactor"); 
+    setPrescaleSeed( time(NULL) );
+  }
 
   const Result AlgoBase::Process(unsigned int triggerbit, const WaveformArray_t& data)
   {
@@ -35,10 +41,14 @@ namespace trigger {
     if ( _prescale_factor<1 )
       throw TriggerException("PrescaleFactor in configuration must be >=1!");
     float border = 1.0/float(_prescale_factor);
-    std::mt19937::result_type seed = time(0);
-    auto real_rand = std::bind(std::uniform_real_distribution<float>(0,1),std::mt19937(seed));
-    if ( real_rand() < border ) return true;
+    float val = _randfunc();
+    if ( val < border ) return true;
     else return false;
+  }
+
+  void AlgoBase::setPrescaleSeed( int seed ) {
+    _randgen.seed( seed );
+    _randfunc = std::bind(std::uniform_real_distribution<float>(0,1),_randgen);
   }
 			      
 

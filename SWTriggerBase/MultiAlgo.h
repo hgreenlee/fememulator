@@ -17,6 +17,7 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <vector>
 
 #include "AlgoBase.h"
 #include "ConfigHolder.h"
@@ -49,7 +50,11 @@ namespace trigger {
     /// Get config for a given algo
     ConfigHolder& GetConfig( std::string algoinstance_name );
 
+    /// Get an Algo by the instance name
     AlgoBase& GetAlgo( std::string algoinstance_name );
+
+    /// Configure All Algos
+    void Configure();
 
     /// Run trigger algorithms
     const ResultArray Process( unsigned int trigbit, const WaveformArray_t&);
@@ -60,7 +65,7 @@ namespace trigger {
   protected:
 
     // map of algos assigned to each bit
-    std::map< unsigned int, int > _trigbit_to_index; // [bit,index]
+    std::map< unsigned int, std::vector<int> > _trigbit_to_index; // [bit,indices]
     std::map< std::string, int > _name_to_index;
     /// Process time using trigger::Watch
     double _time_profile;

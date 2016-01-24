@@ -15,11 +15,13 @@
 #define CONFIGHOLDER_H
 
 #include <iostream>
+#include <string>
 #include "SWTriggerTypes.h"
 #include "TriggerException.h"
 //#include "UtilFunc.h"
 #include <map>
 #include <vector>
+
 namespace trigger {
   /**
      \class ConfigHolder
@@ -100,6 +102,7 @@ namespace trigger {
   template<> std::map< std::string, std::vector< int         > >& ConfigHolder::GetContainer();
   template<> std::map< std::string, std::vector< double      > >& ConfigHolder::GetContainer();
   #endif
+
 }
 
 #endif

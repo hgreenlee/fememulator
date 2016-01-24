@@ -17,6 +17,9 @@
 #include <iostream>
 #include <string>
 #include <map>
+#ifndef __CINT__
+#include <random>
+#endif
 
 #include "ConfigHolder.h"
 #include "Result.h"
@@ -100,10 +103,18 @@ namespace trigger {
     /// Prescale calculator
     bool prescaleTrig(); ///< bool true if passed pre-scale
 
+    /// Prescale RNG
+#ifndef __CINT__
+    std::mt19937 _randgen;
+    std::function<float()> _randfunc;
+#endif
+
+  public:
+    void setPrescaleSeed( int seed );
+
     /// ----------------
     /// abstract factory stuff
 
-    
   private:
     static std::map< std::string, AlgoFactory* > _factories;
   public:
