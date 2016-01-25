@@ -17,6 +17,7 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <functional>
 #ifndef __CINT__
 #include <random>
 #endif
