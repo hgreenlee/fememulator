@@ -49,12 +49,12 @@ software_trg: {
       Discr3deadtime   : 6
       Discr3width      : 6
       # Trigger window settings
-      Discr3WindowStart : 54
-      Discr3WindowSize  : 105
+      Discr3WindowStart : 349
+      Discr3WindowSize  : 682
       TriggerThresMult  : 1
       TriggerThresPHMAX : 130
-      TriggerWindowStart : 57
-      TriggerWindowSize  : 615
+      TriggerWindowStart : 350
+      TriggerWindowSize  : 680
       # Prescale Factor
       PrescaleFactor: 1
   }
@@ -102,12 +102,12 @@ software_trg: {
       Discr3deadtime   : 6
       Discr3width      : 6
       # Trigger window settings
-      Discr3WindowStart : 54
-      Discr3WindowSize  : 105
+      Discr3WindowStart : 349
+      Discr3WindowSize  : 682
       TriggerThresMult  : 1
       TriggerThresPHMAX : 70
-      TriggerWindowStart : 57
-      TriggerWindowSize  : 614
+      TriggerWindowStart : 350
+      TriggerWindowSize  : 680
       # Prescale Factor
       PrescaleFactor: 1
   }
