@@ -8,6 +8,7 @@
 
 #include "TFile.h"
 #include "TH1D.h"
+#include "TGraph.h"
 
 int main( int nargs, char** argv ) {
 
@@ -86,6 +87,13 @@ int main( int nargs, char** argv ) {
   TH1D* heff_offline = new TH1D("heff_offline", ";PHMAX/20;fraction passed", 50, 1, 26);
   heff_online->Sumw2(true);
   heff_offline->Sumw2(true);
+
+
+  // counters
+  int counters[15] = {0};
+  float thresholds[15] = { 0.5, 1.5, 2.5, 3.5, 4.5,
+			   5.5, 6.5, 7.5, 8.5, 9.5,
+			   14.5, 19.5, 24.5, 29.5, 34.5 }; 
   
   int nevents = 0;
   while ( data.ProcessEvent() ) {
@@ -130,10 +138,11 @@ int main( int nargs, char** argv ) {
     // now fill
     
     // we can fill the offline for every event
-    for ( int b=1; b<=heff_offline->GetNbinsX(); b++) {
-      if ( float(offline_phmax)/20.0>heff_offline->GetBinLowEdge(b) )
-	heff_offline->Fill( b );
+    int bin = heff_offline->FindBin( float(offline_phmax)/20.0 );
+    for ( int b=1; b<=bin; b++) {
+      heff_offline->Fill( heff_offline->GetBinCenter(b) );
     }
+
     // online fills differently
     if ( online_pass || (!online_pass && online_passedone) ) {
       int phmax_fill = online_phmax;
@@ -144,9 +153,16 @@ int main( int nargs, char** argv ) {
 	phmax_fill = offline_phmax;
       }
       for ( int b=1; b<=heff_online->GetNbinsX(); b++) {
-	if ( float(phmax_fill)/20.0>heff_online->GetBinLowEdge(b) )
-	  heff_online->Fill( b, weight_fill );
+	if ( float(phmax_fill)/20.0>=heff_online->GetBinCenter(b) )
+	  heff_online->Fill( heff_online->GetBinCenter(b), weight_fill );
       }      
+    }
+
+    // counters
+    for (int n=0; n<15; n++) {
+      if ( float(offline_phmax)/20.0>=thresholds[n] ) {
+	counters[n]++;
+      }
     }
     
     nevents++;
@@ -156,6 +172,12 @@ int main( int nargs, char** argv ) {
   
   heff_offline->Scale(1.0/float(nevents));
   heff_online->Scale(1.0/float(nevents));
+
+  TGraph* goffline = new TGraph( 15 );
+  for (int n=0; n<15; n++) {
+    goffline->SetPoint( n, thresholds[n], float(counters[n])/float(nevents) );
+  }
+  goffline->Write("geff_offline");
 
   output->Write();
   return 0;

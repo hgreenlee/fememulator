@@ -11,7 +11,7 @@ DAQ_LDLIBS += -L${UBOONEDAQ_DATATYPES_LIB} -lubdata_types
 DAQ_LDLIBS += -L${BOOST_LIB} -lboost_wserialization
 ROOTLIBS = `root-config --libs`
 
-all: test_app print_swtrigs
+all: test_app validate_swtrigs
 
 test_app.o: test_app.cc
 	g++ $(CXXFLAGS) -I./../ -c test_app.cc -o test_app.o
@@ -20,12 +20,12 @@ test_app: test_app.o
 	g++ $(CXXFLAGS) -o test_app test_app.o $(LDLIBS)
 	@rm test_app.o
 
-print_swtrigs.o: print_swtrigs.cc
-	g++ $(CXXFLAGS) -I./../ $(INCFLAGS) -c print_swtrigs.cc -o print_swtrigs.o
+validate_swtrigs.o: validate_swtrigs.cc
+	g++ $(CXXFLAGS) -I./../ $(INCFLAGS) -c validate_swtrigs.cc -o validate_swtrigs.o
 
-print_swtrigs: print_swtrigs.o
-	g++ $(CXXFLAGS) -o print_swtrigs print_swtrigs.o $(LDLIBS) $(DAQ_LDLIBS) $(ROOTLIBS)
-	@rm print_swtrigs.o
+validate_swtrigs: validate_swtrigs.o
+	g++ $(CXXFLAGS) -o validate_swtrigs validate_swtrigs.o $(LDLIBS) $(DAQ_LDLIBS) $(ROOTLIBS)
+	@rm validate_swtrigs.o
 
 clean:
-	rm test_app print_swtrigs
+	rm test_app validate_swtrigs
