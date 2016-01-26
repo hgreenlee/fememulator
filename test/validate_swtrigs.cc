@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <map>
+#include <cmath>
 
 #include "TriggerDAQApp/DAQFileInterface.h"
 #include "SWTriggerBase/SWTriggerTypes.h"
@@ -8,7 +10,22 @@
 
 #include "TFile.h"
 #include "TH1D.h"
-#include "TGraph.h"
+#include "TGraphErrors.h"
+
+
+class Tracker {
+
+public:
+  Tracker() {
+    memset( counters, 0, sizeof(float)*15);
+    memset( w2, 0, sizeof(float)*15 );
+    fills = 0.0;
+  }
+  ~Tracker() {};
+  float counters[15];
+  float w2[15];
+  float fills;
+};
 
 int main( int nargs, char** argv ) {
 
@@ -83,42 +100,48 @@ int main( int nargs, char** argv ) {
 
   // Output
   TFile* output = new TFile( "output_validate_swtrigs.root", "RECREATE" );
-  TH1D* heff_online  = new TH1D("heff_online", ";PHMAX/20;fraction passed",  50, 1, 26);
-  TH1D* heff_offline = new TH1D("heff_offline", ";PHMAX/20;fraction passed", 50, 1, 26);
-  heff_online->Sumw2(true);
-  heff_offline->Sumw2(true);
 
 
   // counters
-  int counters[15] = {0};
   float thresholds[15] = { 0.5, 1.5, 2.5, 3.5, 4.5,
 			   5.5, 6.5, 7.5, 8.5, 9.5,
 			   14.5, 19.5, 24.5, 29.5, 34.5 }; 
+  std::map< std::string, Tracker > counters;
+  counters["ext_online"] = Tracker();
+  counters["ext_offline"] = Tracker();
+  counters["bnb_online"] = Tracker();
+  counters["bnb_offline"] = Tracker();
   
   int nevents = 0;
   while ( data.ProcessEvent() ) {
     std::cout << "[ Run " << data.run() << " Subrun " << data.subrun() << " Event " << data.event() << " ]" << std::endl; 
+    // Waveforms for analysis
     const trigger::WaveformArray_t& wfms = data.WaveformArray();
-    const trigger::ResultArray& results = data.GetTriggerResults();
-    trigger::ResultArray offline = algos.Process( data.trigger_bits(), wfms );
-    int  offline_phmax = offline.at(0).amplitude;
-    int  offline_multi = offline.at(0).multiplicity;
-    bool offline_pass  = offline.at(0).pass_algo;
+
+    // Output of Trigger run by DAQ
+    const trigger::ResultArray& online_results = data.GetTriggerResults();
+
+    // Output of Trigger run offline
+    trigger::ResultArray offline_results = algos.Process( data.trigger_bits(), wfms );
+    int  offline_phmax = offline_results.at(0).amplitude;
+    int  offline_multi = offline_results.at(0).multiplicity;
+    bool offline_pass  = offline_results.at(0).pass_algo;
     std::cout << "  trigger bit: " << data.trigger_bits() << std::endl;
     std::cout << "  number of pmt wfms: " << wfms.size() << std::endl;
-    std::cout << "  number of online triggers: " << results.size() << " [passed one=" << results.passedone << "]" << std::endl;
-    std::cout << "  number of offline triggers: " << offline.size() << " (" << offline.at(0).algo_instance_name << ")" << std::endl;
+    std::cout << "  number of online triggers: " << online_results.size() << " [passed one=" << online_results.passedone << "]" << std::endl;
+    std::cout << "  number of offline triggers: " << offline_results.size() << " (" << offline_results.at(0).algo_instance_name << ")" << std::endl;
     int online_phmax = 0;
     int online_multi = 0;
     float online_weight = 1.0;
     bool online_pass = 0;
     bool online_passedone = false;
-    for ( auto &result : results ) {
+    std::string hwtrigtype; // bnb or ext
+    for ( auto &result : online_results ) {
       std::cout << "  " << result.algo_instance_name 
 		<< "  pass=" << result.pass 
 		<< " algo=" << result.pass_algo  << " [offline=" << offline_pass << "]"
 		<< " prescale=" << result.pass_prescale
-		<< "  tick=" << result.time << " [offline=" << offline.at(0).time << "]"
+		<< "  tick=" << result.time << " [offline=" << offline_results.at(0).time << "]"
 		<< "  phmax=" << result.amplitude << " [offline=" << offline_phmax << "]"
 		<< "  multi=" << result.multiplicity << " [offline=" << offline_multi << "]"
 		<< "  weight=" << result.prescale_weight
@@ -129,55 +152,72 @@ int main( int nargs, char** argv ) {
 	online_phmax = result.amplitude;
 	online_multi = result.multiplicity;
 	online_pass = result.pass;
+	hwtrigtype = "ext";
       }
       else if ( result.algo_instance_name=="EXT_PrescaleAlgo" ) {
 	online_weight = result.prescale_weight;
+	hwtrigtype = "ext";
+      }
+      else if ( result.algo_instance_name=="BNB_FEMBeamTriggerAlgo" ) {
+	online_phmax = result.amplitude;
+	online_multi = result.multiplicity;
+	online_pass = result.pass;
+	hwtrigtype = "bnb";	
+      }
+      else if ( result.algo_instance_name=="BNB_PrescaleAlgo" ) {
+	online_weight = result.prescale_weight;
+	hwtrigtype = "bnb";
       }
     }
 
-    // now fill
-    
-    // we can fill the offline for every event
-    int bin = heff_offline->FindBin( float(offline_phmax)/20.0 );
-    for ( int b=1; b<=bin; b++) {
-      heff_offline->Fill( heff_offline->GetBinCenter(b) );
-    }
+    // now fill the counters
 
-    // online fills differently
-    if ( online_pass || (!online_pass && online_passedone) ) {
-      int phmax_fill = online_phmax;
-      float weight_fill = 1.0;
-      if ( !online_pass ) {
-	// passed via prescale
-	weight_fill = online_weight;
-	phmax_fill = offline_phmax;
-      }
-      for ( int b=1; b<=heff_online->GetNbinsX(); b++) {
-	if ( float(phmax_fill)/20.0>=heff_online->GetBinCenter(b) )
-	  heff_online->Fill( heff_online->GetBinCenter(b), weight_fill );
-      }      
-    }
-
-    // counters
+    // offline counters
+    Tracker& trackoff = counters[hwtrigtype+"_offline"];
     for (int n=0; n<15; n++) {
       if ( float(offline_phmax)/20.0>=thresholds[n] ) {
-	counters[n]++;
+	trackoff.counters[n] += 1.0;
+	trackoff.w2[n] += 1.0;
       }
     }
+    trackoff.fills += 1.0;
+
+    // online counters: we have to weight up events that fail online trigger algo, but pass online
+    Tracker& trackon = counters[hwtrigtype+"_online"];
+    if ( online_passedone ) {
+      float fillweight = 1.0;
+      float fillphmax = online_phmax;
+      if ( !online_pass ) {
+	// then the prescale triggered the event
+	fillphmax = offline_phmax; // because if fails, online doesn't store a phmax value (should correct this?)
+	fillweight = (float)online_weight;
+      }
+      for (int n=0; n<15; n++) {
+	if ( float(fillphmax)/20.0>=thresholds[n] ) {
+	  trackon.counters[n] += fillweight;
+	  trackon.w2[n] += fillweight*fillweight;
+	}
+      }
+    }
+    trackon.fills += 1.0;
     
     nevents++;
     //if (nevents>100)
     //break;
   }
   
-  heff_offline->Scale(1.0/float(nevents));
-  heff_online->Scale(1.0/float(nevents));
-
-  TGraph* goffline = new TGraph( 15 );
-  for (int n=0; n<15; n++) {
-    goffline->SetPoint( n, thresholds[n], float(counters[n])/float(nevents) );
+  // fill graphs!
+  for ( auto it=counters.begin(); it!=counters.end(); it++ ) {
+    TGraphErrors* goffline = new TGraphErrors( 15 ); // needs to be tgrapherrrors
+    Tracker& out = (*it).second;
+    if ( out.fills>0 ) {
+      for (int n=0; n<15; n++) {
+	goffline->SetPoint( n, thresholds[n], float(out.counters[n])/out.fills );
+	goffline->SetPointError( n, 0, sqrt(out.w2[n])/out.fills );
+      }
+    }
+    goffline->Write((*it).first.c_str());
   }
-  goffline->Write("geff_offline");
 
   output->Write();
   return 0;
