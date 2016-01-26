@@ -15,6 +15,7 @@
 #include "datatypes/raw_data_access.h"
 #include "datatypes/uboone_data_utils.h"
 //#include "datatypes/ub_EventRecord.h"
+#include "datatypes/ub_FEMBeamTriggerOutput.h"
 
 namespace trigger {
 
@@ -174,8 +175,30 @@ namespace trigger {
     _event = globalHeader.getEventNumber();
     _subrun = globalHeader.getSubrunNumber();
     _run = globalHeader.getRunNumber();
+    
+    try {
+      std::vector<ub_FEMBeamTriggerOutput> const& trigout = eventRecord.getSWTriggerOutputVector();
+      std::cout << "[DAQFileInterface::ProcessTriggerResults()] Number of triggers: " << trigout.size() << std::endl;
+      _results.clear();
+      for ( auto it=trigout.begin(); it!=trigout.end(); it++ ) {
+	Result resout;
+	const ub_FEMBeamTriggerOutput& trig = (*it);
+	resout.pass = trig.pass;
+	resout.pass_algo = trig.pass_algo;
+	resout.pass_prescale = trig.pass_prescale;
+	resout.amplitude = trig.amplitude;
+	resout.time = trig.time;
+	resout.multiplicity = trig.multiplicity;
+	resout.prescale_weight = trig.prescale_weight;
+	resout.algo_instance_name = trig.algo_instance_name;
+	_results.emplace_back( resout );
+      }
+    }
+    catch (...) {
+      std::cout << "Could not find or parse FEMBeamTriggerOutput data product" << std::endl;
+    }
   }
-  
+
 }
 
 #endif

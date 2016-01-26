@@ -312,12 +312,19 @@ namespace trigger {
 	if(fire_time >= 0) break;
 	
       }
-      
+
       // store results
       result.pass_algo     = (fire_time >= 0);
       result.amplitude     = maxdiff_attrig;
       result.multiplicity  = maxmulti_attrig;
       result.time          = fire_time;
+
+      if ( fire_time<0 ) {
+	// if no trigger, we fill with the window's maxdiff and multi
+	result.amplitude = winmaxdiff;
+	result.multiplicity = winmaxmulti;
+      }
+      
       
       if(debug()) 
 	std::cout << "[fememu::emulate] maxdiff=" << winmaxdiff << " maxhit=" << winmaxmulti << std::endl;

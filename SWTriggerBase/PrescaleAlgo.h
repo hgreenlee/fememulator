@@ -39,7 +39,6 @@ namespace trigger {
       };
   };
 
-  static PrescaleAlgoFactory __global_PrescaleAlgoFactory__;
   
 }
 

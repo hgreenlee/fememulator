@@ -24,6 +24,8 @@
 #include <vector>
 #include <string>
 #include "UtilFunc.h"
+#include "SWTriggerBase/Result.h"
+
 namespace trigger {
   /**
      \class DAQFileInterface
@@ -51,6 +53,7 @@ namespace trigger {
     size_t event  () const { return _event;  }
     size_t run    () const { return _run;    }
     size_t subrun () const { return _subrun; }
+    const ResultArray& GetTriggerResults() { return _results; };
 
   private:
 #ifndef __CINT__
@@ -82,6 +85,8 @@ namespace trigger {
     std::string _outfile;
     // ::larlite::storage_manager _mgr;
     std::ifstream* _is;
+
+    ResultArray _results;
 
   };
 }

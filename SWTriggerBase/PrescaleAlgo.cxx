@@ -2,6 +2,8 @@
 #include <iostream>
 
 namespace trigger {
+
+  static PrescaleAlgoFactory __global_PrescaleAlgoFactory__;
   
   PrescaleAlgo::PrescaleAlgo(const std::string name)
     : AlgoBase(name)
