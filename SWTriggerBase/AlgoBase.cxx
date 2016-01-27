@@ -15,7 +15,7 @@ namespace trigger {
   { 
     this->_Configure_(); 
     _configured = true; 
-    _prescale_factor = _cfg.Get<int>("PrescaleFactor"); 
+    _prescale_factor = _cfg.Get<double>("PrescaleFactor"); 
     setPrescaleSeed( time(NULL) );
   }
 
@@ -27,7 +27,7 @@ namespace trigger {
     res.algo_instance_name = this->Name();
     res.pass_prescale = prescaleTrig();
     res.pass = res.pass_prescale && res.pass_algo; // pass is an AND of pre-scale and algo result
-    res.prescale_weight = (float)_prescale_factor;
+    res.prescale_weight = 1.0/_prescale_factor;
 
     _time_profile  += _watch.WallTime();
     ++_process_count;
@@ -38,17 +38,16 @@ namespace trigger {
   { return _time_profile / _process_count; }
 
   bool AlgoBase::prescaleTrig() {
-    if ( _prescale_factor<1 )
-      throw TriggerException("PrescaleFactor in configuration must be >=1!");
-    float border = 1.0/float(_prescale_factor);
-    float val = _randfunc();
-    if ( val < border ) return true;
+    if ( _prescale_factor>1 )
+      throw TriggerException("PrescaleFactor in configuration must be a float between (0,1]!");
+    double val = _randfunc();
+    if ( val < _prescale_factor ) return true;
     else return false;
   }
 
   void AlgoBase::setPrescaleSeed( int seed ) {
     _randgen.seed( seed );
-    _randfunc = std::bind(std::uniform_real_distribution<float>(0,1),_randgen);
+    _randfunc = std::bind(std::uniform_real_distribution<double>(0,1),_randgen);
   }
 			      
 

@@ -35,10 +35,10 @@ int main( int nargs, char** argv ) {
 
   // EXT only events
   inputfiles.push_back( "/home/tmw/run4692_multialgotest_extonly/TestRun-2016_1_25_16_24_52-0004692-00000.ubdaq" );
-  inputfiles.push_back( "/home/tmw/run4692_multialgotest_extonly/TestRun-2016_1_25_16_24_52-0004692-00001.ubdaq" );
-  inputfiles.push_back( "/home/tmw/run4692_multialgotest_extonly/TestRun-2016_1_25_16_24_52-0004692-00002.ubdaq" );
-  inputfiles.push_back( "/home/tmw/run4692_multialgotest_extonly/TestRun-2016_1_25_16_24_52-0004692-00003.ubdaq" );
-  inputfiles.push_back( "/home/tmw/run4692_multialgotest_extonly/TestRun-2016_1_25_16_24_52-0004692-00004.ubdaq" );
+  // inputfiles.push_back( "/home/tmw/run4692_multialgotest_extonly/TestRun-2016_1_25_16_24_52-0004692-00001.ubdaq" );
+  // inputfiles.push_back( "/home/tmw/run4692_multialgotest_extonly/TestRun-2016_1_25_16_24_52-0004692-00002.ubdaq" );
+  // inputfiles.push_back( "/home/tmw/run4692_multialgotest_extonly/TestRun-2016_1_25_16_24_52-0004692-00003.ubdaq" );
+  // inputfiles.push_back( "/home/tmw/run4692_multialgotest_extonly/TestRun-2016_1_25_16_24_52-0004692-00004.ubdaq" );
 
   // EXT+BNB events
   // inputfiles.push_back( "/home/tmw/run4693_multialgotest_extbnb/TestRun-2016_1_25_16_37_3-0004693-00000.ubdaq" );
@@ -85,10 +85,10 @@ int main( int nargs, char** argv ) {
   algos.GetConfig("swtrg_bnb").Set("Discr3WindowStart",54,true);
   algos.GetConfig("swtrg_bnb").Set("Discr3WindowSize",105,true);
   algos.GetConfig("swtrg_bnb").Set("TriggerThresMult",1,true);
-  algos.GetConfig("swtrg_bnb").Set("TriggerThresPHMAX",10000,true);
+  algos.GetConfig("swtrg_bnb").Set("TriggerThresPHMAX",70,true);
   algos.GetConfig("swtrg_bnb").Set("TriggerWindowStart",57,true);
   algos.GetConfig("swtrg_bnb").Set("TriggerWindowSize",104,true);
-  algos.GetConfig("swtrg_bnb").Set("PrescaleFactor",1,true);
+  algos.GetConfig("swtrg_bnb").Set("PrescaleFactor",1.0,true);
 
   algos.GetConfig("swtrg_ext").Set("Verbosity",3,true);
   algos.GetConfig("swtrg_ext").Set("MinReadoutTick",500,true);
@@ -103,10 +103,10 @@ int main( int nargs, char** argv ) {
   algos.GetConfig("swtrg_ext").Set("Discr3WindowStart",54,true);
   algos.GetConfig("swtrg_ext").Set("Discr3WindowSize",105,true);
   algos.GetConfig("swtrg_ext").Set("TriggerThresMult",1,true);
-  algos.GetConfig("swtrg_ext").Set("TriggerThresPHMAX",10000,true);
+  algos.GetConfig("swtrg_ext").Set("TriggerThresPHMAX",70,true);
   algos.GetConfig("swtrg_ext").Set("TriggerWindowStart",57,true);
   algos.GetConfig("swtrg_ext").Set("TriggerWindowSize",104,true);
-  algos.GetConfig("swtrg_ext").Set("PrescaleFactor",1,true);
+  algos.GetConfig("swtrg_ext").Set("PrescaleFactor",1.0,true);
 
 
   algos.Configure();

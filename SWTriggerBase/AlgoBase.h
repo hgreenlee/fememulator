@@ -99,7 +99,7 @@ namespace trigger {
     double _process_count;
 
     /// prescale factor
-    int _prescale_factor;
+    double _prescale_factor;
 
     /// Prescale calculator
     bool prescaleTrig(); ///< bool true if passed pre-scale
@@ -107,7 +107,7 @@ namespace trigger {
     /// Prescale RNG
 #ifndef __CINT__
     std::mt19937 _randgen;
-    std::function<float()> _randfunc;
+    std::function<double()> _randfunc;
 #endif
 
   public:

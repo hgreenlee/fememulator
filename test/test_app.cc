@@ -31,9 +31,9 @@ int main( int narg, char** argv ) {
   algos.GetConfig("swtrg_bnb").Set("TriggerThresPHMAX",2000,true);
   algos.GetConfig("swtrg_bnb").Set("TriggerWindowStart",57,true);
   algos.GetConfig("swtrg_bnb").Set("TriggerWindowSize",104,true);
-  algos.GetConfig("swtrg_bnb").Set("PrescaleFactor",1,true);
+  algos.GetConfig("swtrg_bnb").Set("PrescaleFactor",1.0,true);
 
-  algos.GetConfig("prescale_bnb").Set("PrescaleFactor",2,true);
+  algos.GetConfig("prescale_bnb").Set("PrescaleFactor",2.0,true);
 
   algos.Configure();
   algos.GetAlgo("prescale_bnb").setPrescaleSeed( 100 );
