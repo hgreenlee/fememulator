@@ -32,7 +32,21 @@ int main( int nargs, char** argv ) {
   std::cout << "VALIDATE SWTRIGS" << std::endl;
 
   std::vector< std::string > inputfiles;
+
+  // EXT only events
   inputfiles.push_back( "/home/tmw/run4692_multialgotest_extonly/TestRun-2016_1_25_16_24_52-0004692-00000.ubdaq" );
+  inputfiles.push_back( "/home/tmw/run4692_multialgotest_extonly/TestRun-2016_1_25_16_24_52-0004692-00001.ubdaq" );
+  inputfiles.push_back( "/home/tmw/run4692_multialgotest_extonly/TestRun-2016_1_25_16_24_52-0004692-00002.ubdaq" );
+  inputfiles.push_back( "/home/tmw/run4692_multialgotest_extonly/TestRun-2016_1_25_16_24_52-0004692-00003.ubdaq" );
+  inputfiles.push_back( "/home/tmw/run4692_multialgotest_extonly/TestRun-2016_1_25_16_24_52-0004692-00004.ubdaq" );
+
+  // EXT+BNB events
+  // inputfiles.push_back( "/home/tmw/run4693_multialgotest_extbnb/TestRun-2016_1_25_16_37_3-0004693-00000.ubdaq" );
+  // inputfiles.push_back( "/home/tmw/run4693_multialgotest_extbnb/TestRun-2016_1_25_16_37_3-0004693-00001.ubdaq" );
+  // inputfiles.push_back( "/home/tmw/run4693_multialgotest_extbnb/TestRun-2016_1_25_16_37_3-0004693-00002.ubdaq" );
+  // inputfiles.push_back( "/home/tmw/run4693_multialgotest_extbnb/TestRun-2016_1_25_16_37_3-0004693-00003.ubdaq" );
+  // inputfiles.push_back( "/home/tmw/run4693_multialgotest_extbnb/TestRun-2016_1_25_16_37_3-0004693-00004.ubdaq" );
+  // inputfiles.push_back( "/home/tmw/run4693_multialgotest_extbnb/TestRun-2016_1_25_16_37_3-0004693-00005.ubdaq" );
 
   trigger::DAQFileInterface data;
 
@@ -71,7 +85,7 @@ int main( int nargs, char** argv ) {
   algos.GetConfig("swtrg_bnb").Set("Discr3WindowStart",54,true);
   algos.GetConfig("swtrg_bnb").Set("Discr3WindowSize",105,true);
   algos.GetConfig("swtrg_bnb").Set("TriggerThresMult",1,true);
-  algos.GetConfig("swtrg_bnb").Set("TriggerThresPHMAX",70,true);
+  algos.GetConfig("swtrg_bnb").Set("TriggerThresPHMAX",10000,true);
   algos.GetConfig("swtrg_bnb").Set("TriggerWindowStart",57,true);
   algos.GetConfig("swtrg_bnb").Set("TriggerWindowSize",104,true);
   algos.GetConfig("swtrg_bnb").Set("PrescaleFactor",1,true);
@@ -89,7 +103,7 @@ int main( int nargs, char** argv ) {
   algos.GetConfig("swtrg_ext").Set("Discr3WindowStart",54,true);
   algos.GetConfig("swtrg_ext").Set("Discr3WindowSize",105,true);
   algos.GetConfig("swtrg_ext").Set("TriggerThresMult",1,true);
-  algos.GetConfig("swtrg_ext").Set("TriggerThresPHMAX",70,true);
+  algos.GetConfig("swtrg_ext").Set("TriggerThresPHMAX",10000,true);
   algos.GetConfig("swtrg_ext").Set("TriggerWindowStart",57,true);
   algos.GetConfig("swtrg_ext").Set("TriggerWindowSize",104,true);
   algos.GetConfig("swtrg_ext").Set("PrescaleFactor",1,true);
@@ -111,6 +125,9 @@ int main( int nargs, char** argv ) {
   counters["ext_offline"] = Tracker();
   counters["bnb_online"] = Tracker();
   counters["bnb_offline"] = Tracker();
+  
+  int ndecision_disagree = 0;
+  TH1D* hphmaxdiff = new TH1D("hphmaxdiff",";dphmax(online-offline);",100, -20, 20 );
   
   int nevents = 0;
   while ( data.ProcessEvent() ) {
@@ -170,6 +187,15 @@ int main( int nargs, char** argv ) {
       }
     }
 
+    // track disagreements
+    if ( online_pass!=offline_pass ) {
+      ndecision_disagree++;
+    }
+
+    if ( online_pass ) {
+      hphmaxdiff->Fill( online_phmax-offline_phmax );
+    }
+
     // now fill the counters
 
     // offline counters
@@ -220,5 +246,7 @@ int main( int nargs, char** argv ) {
   }
 
   output->Write();
+
+  std::cout << "NUMBER OF DISAGREEMENTS: " << ndecision_disagree << std::endl;
   return 0;
 }
