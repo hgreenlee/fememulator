@@ -9,7 +9,9 @@
 
 namespace trigger {
 
-  std::map< std::string, AlgoFactory* > AlgoBase::_factories;
+  AlgoBase::AlgoBase(const std::string name)
+    : _cfg(name) , _time_profile(0) , _process_count(0) 
+  { _cfg.Set<double>("PrescaleFactor",1.0); }
 
   void AlgoBase::Configure()
   { 

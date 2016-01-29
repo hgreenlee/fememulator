@@ -11,7 +11,7 @@ namespace trigger {
 
   namespace fememu {
     
-    class FEMBeamTriggerAlgo : public trigger::AlgoBase {
+    class FEMBeamTriggerAlgo : public AlgoBase {
       
     public:
       /// Default ctor
@@ -45,7 +45,7 @@ namespace trigger {
       void _Configure_();
       
       /// AlgoBase::_Process_() implementation
-      const trigger::Result _Process_( unsigned int triggerbit, const WaveformArray_t& );
+      const Result _Process_( unsigned int triggerbit, const WaveformArray_t& );
       
     private:
 
@@ -74,19 +74,14 @@ namespace trigger {
       inline bool error   () const { return _fememu_cfg.fVerbosity <= kERROR;   }
     };
 
-    
-    class FEMBeamTriggerAlgoFactory : public ::trigger::AlgoFactory {
+
+    class FEMBeamTriggerAlgoFactory : public AlgoFactoryBase {
     public:
-      FEMBeamTriggerAlgoFactory() {
-	AlgoBase::registerConcreteFactory( "FEMBeamTriggerAlgo",this );
-      };
-      virtual ~FEMBeamTriggerAlgoFactory() {};
-      virtual AlgoBase* create(std::string algoinstance_name) {
-	return new FEMBeamTriggerAlgo(algoinstance_name);
-      };
+      FEMBeamTriggerAlgoFactory(){ AlgoFactory::get()->add_factory("FEMBeamTriggerAlgo",this); }
+      virtual ~FEMBeamTriggerAlgoFactory(){}
+      AlgoBase* create(std::string instance_name) { return new FEMBeamTriggerAlgo(instance_name); }
     };
 
-    static FEMBeamTriggerAlgoFactory __global_FEMBeamTriggerAlgoFactory__;
   }
 }
 

@@ -3,12 +3,12 @@
 
 #include <vector>
 #include "SWTriggerTypes.h"
-#include "AlgoBase.h"
 #include "AlgoFactory.h"
+#include "AlgoBase.h"
 
 namespace trigger {
 
-  class PrescaleAlgo : public trigger::AlgoBase {
+  class PrescaleAlgo : public AlgoBase {
     
   public:
     /// Default ctor
@@ -22,24 +22,20 @@ namespace trigger {
     void _Configure_() {};
     
     /// AlgoBase::_Process_() implementation
-    const trigger::Result _Process_( unsigned int triggerbit, const WaveformArray_t& );
+    const Result _Process_( unsigned int triggerbit, const WaveformArray_t& );
     
   private:
     
   };
 
-  class PrescaleAlgoFactory : public ::trigger::AlgoFactory {
+  class PrescaleAlgoFactory : public AlgoFactoryBase {
     public:
-      PrescaleAlgoFactory() {
-	AlgoBase::registerConcreteFactory( "PrescaleAlgo",this );
-      };
-      virtual ~PrescaleAlgoFactory() {};
-      virtual AlgoBase* create(std::string algoinstance_name) {
-	return new PrescaleAlgo(algoinstance_name);
-      };
+    PrescaleAlgoFactory(){ AlgoFactory::get()->add_factory("PrescaleAlgo",this); }
+    ~PrescaleAlgoFactory(){}
+    AlgoBase* create(std::string algoinstance_name) 
+    {return new PrescaleAlgo(algoinstance_name);}
   };
 
-  
 }
 
 #endif

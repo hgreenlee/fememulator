@@ -50,12 +50,11 @@ namespace trigger {
        Constructor: this is where an algorithm should \n
        set configuration parameter names.
     */
-  AlgoBase(const std::string name="noname") 
-    : _cfg(name) , _time_profile(0) , _process_count(0) {}
+    AlgoBase(const std::string name="noname");
     
     /// Default destructor
     virtual ~AlgoBase(){}
-
+    
     /// Name getter (shares name w/ config object)
     const std::string& Name() const { return _cfg.Name(); }
 
@@ -92,7 +91,7 @@ namespace trigger {
     /// Boolean to flag if AlgoBase::Configure is called or not
     bool _configured;
     /// Watch for simple profiling
-    trigger::Watch _watch;
+    ::trigger::Watch _watch;
     /// Process time using trigger::Watch
     double _time_profile;
     /// Process counter
@@ -116,27 +115,6 @@ namespace trigger {
     /// ----------------
     /// abstract factory stuff
 
-  private:
-    static std::map< std::string, AlgoFactory* > _factories;
-  public:
-    static void registerConcreteFactory( const std::string& name, AlgoFactory* factory ) {
-      _factories[ name ] = factory;
-    };
-    static AlgoBase* create( std::string algotype_name, std::string algoinstance_name ) {
-      std::map< std::string, AlgoFactory* >::iterator it=_factories.find(algotype_name);
-      if ( it==_factories.end() ) {
-	char oops[500];
-	sprintf(oops,"Algo type with name '%s' has not been registered.", algotype_name.c_str() );
-	throw TriggerException(oops);
-      }
-      return (*it).second->create(algoinstance_name);
-    };
-    static void listAlgoTypes() {
-      std::cout << "[AlgoFactories]" << std::endl;
-      for ( auto it=_factories.begin(); it!=_factories.end(); it++ )
-	std::cout << "  " << (*it).first << std::endl;
-    };
-    
   };
 }
 #endif

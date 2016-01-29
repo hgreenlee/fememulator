@@ -5,6 +5,8 @@
 namespace trigger {
   
   namespace fememu {
+
+    static FEMBeamTriggerAlgoFactory __global_FEMBeamTriggerAlgoFactory__;
     
     FEMBeamTriggerAlgo::FEMBeamTriggerAlgo(const std::string name)
       : trigger::AlgoBase(name)

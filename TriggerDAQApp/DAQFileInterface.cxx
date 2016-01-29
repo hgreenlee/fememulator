@@ -175,7 +175,7 @@ namespace trigger {
     _event = globalHeader.getEventNumber();
     _subrun = globalHeader.getSubrunNumber();
     _run = globalHeader.getRunNumber();
-    
+
     try {
       std::vector<ub_FEMBeamTriggerOutput> const& trigout = eventRecord.getSWTriggerOutputVector();
       std::cout << "[DAQFileInterface::ProcessTriggerResults()] Number of triggers: " << trigout.size() << std::endl;
@@ -197,6 +197,7 @@ namespace trigger {
     catch (...) {
       std::cout << "Could not find or parse FEMBeamTriggerOutput data product" << std::endl;
     }
+
   }
 
 }

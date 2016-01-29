@@ -72,7 +72,7 @@ namespace trigger {
     /// Process counter
     double _process_count;
     /// Watch for simple profiling
-    trigger::Watch _watch;
+    ::trigger::Watch _watch;
 
   };
 }

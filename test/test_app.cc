@@ -8,7 +8,7 @@ int main( int narg, char** argv ) {
   std::cout << "Test App" << std::endl;
 
   trigger::MultiAlgo algos;
-  trigger::AlgoBase::listAlgoTypes();
+  //trigger::AlgoBase::listAlgoTypes();
 
   int trigbit = 0x200;
   algos.declareAlgo( trigbit, "FEMBeamTriggerAlgo", "swtrg_bnb" );

@@ -1,46 +1,11 @@
-#include <iostream>
-#include <string>
-#include <vector>
-#include <map>
-#include <cmath>
 
-#include "TriggerDAQApp/DAQFileInterface.h"
-#include "SWTriggerBase/SWTriggerTypes.h"
-#include "SWTriggerBase/MultiAlgo.h"
-
-#include "TFile.h"
-#include "TH1D.h"
-#include "TGraphErrors.h"
-
-
-class Tracker {
-
-public:
-  Tracker() {
-    memset( counters, 0, sizeof(float)*15);
-    memset( w2, 0, sizeof(float)*15 );
-    fills = 0.0;
-  }
-  ~Tracker() {};
-  float counters[15];
-  float w2[15];
-  float fills;
-};
-
-int main( int nargs, char** argv ) {
 
   std::cout << "VALIDATE SWTRIGS" << std::endl;
 
-  trigger::DAQFileInterface data;
-
-  for(size_t i=0; i<nargs; ++i) {
-    if(!i) continue;
-    std::cout<<"Input: "<<argv[i]<<std::endl;
-    data.AddInputFile(argv[i]);
-  }
+  std::vector< std::string > inputfiles;
 
   // EXT only events
-  //inputfiles.push_back( "/home/tmw/run4692_multialgotest_extonly/TestRun-2016_1_25_16_24_52-0004692-00000.ubdaq" );
+  inputfiles.push_back( "/home/tmw/run4692_multialgotest_extonly/TestRun-2016_1_25_16_24_52-0004692-00000.ubdaq" );
   // inputfiles.push_back( "/home/tmw/run4692_multialgotest_extonly/TestRun-2016_1_25_16_24_52-0004692-00001.ubdaq" );
   // inputfiles.push_back( "/home/tmw/run4692_multialgotest_extonly/TestRun-2016_1_25_16_24_52-0004692-00002.ubdaq" );
   // inputfiles.push_back( "/home/tmw/run4692_multialgotest_extonly/TestRun-2016_1_25_16_24_52-0004692-00003.ubdaq" );
@@ -53,6 +18,13 @@ int main( int nargs, char** argv ) {
   // inputfiles.push_back( "/home/tmw/run4693_multialgotest_extbnb/TestRun-2016_1_25_16_37_3-0004693-00003.ubdaq" );
   // inputfiles.push_back( "/home/tmw/run4693_multialgotest_extbnb/TestRun-2016_1_25_16_37_3-0004693-00004.ubdaq" );
   // inputfiles.push_back( "/home/tmw/run4693_multialgotest_extbnb/TestRun-2016_1_25_16_37_3-0004693-00005.ubdaq" );
+
+  trigger::DAQFileInterface data;
+
+  for ( auto &f : inputfiles ) {
+    std::cout << "Adding Input file: " << f << std::endl;
+    data.AddInputFile( f );
+  }
 
   data.SetTarget(5,0,32,700);
   data.Initialize();

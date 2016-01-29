@@ -5,22 +5,20 @@ set(Yellow      "${Esc}[33m")
 cmake_minimum_required (VERSION 2.8)
 project (DAQTriggerAlgo)
 
-execute_process(COMMAND python -c "import ROOT;print 1" 
-			OUTPUT_VARIABLE USE_ROOT 
-			OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
-IF(USE_ROOT)
+set(USE_ROOT 0)
+IF(DEFINED ENV{SWTRIGGER_ROOT})
+  set(USE_ROOT 1)
   execute_process(COMMAND root-config --incdir 
 		  OUTPUT_VARIABLE ROOT_INCDIR 
 		  OUTPUT_STRIP_TRAILING_WHITESPACE)
   execute_process(COMMAND root-config --libs 
 		  OUTPUT_VARIABLE ROOT_LIB 
 		  OUTPUT_STRIP_TRAILING_WHITESPACE)
-  execute_process(COMMAND python -c "import ROOT;print (int(ROOT.gROOT.GetVersion()[0]) == 6)" 
-  		  OUTPUT_VARIABLE ROOT6 
-		  OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
-  IF(${ROOT6})
+  IF(ENV{SWTRIGGER_ROOT} STREQUAL "6")
+    set(ROOT6 1)
     message("--${Yellow} Using ROOT6${ColorReset}")
   ELSE()
+    set(ROOT6 0)
     message("--${Yellow} Using ROOT5${ColorReset}")
   ENDIF()
 ELSE()

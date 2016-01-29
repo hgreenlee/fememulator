@@ -32,18 +32,18 @@ IF(USE_ROOT)
 		  -s ${DAQ_TRIGGER_ALGO_LIBDIR}/${SHLIB}
 		  -rml ${SHLIB}
 		  -rmf ${DAQ_TRIGGER_ALGO_LIBDIR}/libTriggerDAQApp.rootmap
-		  -c ${CINTFLAGS} -I${ROOT_INCDIR} -I${DAQ_TRIGGER_ALGO_INCDIR} -I.
+		  -c ${CINTFLAGS} -I${ROOT_INCDIR} -I${DAQ_TRIGGER_ALGO_INCDIR} -I${UBDAQ_DATATYPES_INC} -I. 
 		  ${HEADERS} ${LINKDEF})
   ELSE()
   execute_process(COMMAND rootcint
   		  -f ${CMAKE_CURRENT_BINARY_DIR}/${DICT_NAME}.cxx 
-		  -c -I${ROOT_INCDIR} -I${DAQ_TRIGGER_ALGO_INCDIR} -I. 
+		  -c -I${ROOT_INCDIR} -I${DAQ_TRIGGER_ALGO_INCDIR} -I${UNDAQ_DATATYPES_INC} -I. 
 		  -p  ${HEADERS} ${LINKDEF})
 
   ENDIF()
   include_directories(${ROOT_INCDIR})
   add_library(TriggerDAQApp SHARED ${SOURCES} ${CMAKE_CURRENT_BINARY_DIR}/${DICT_NAME}.cxx)
-  target_link_libraries(TriggerDAQApp SWTriggerBase ${ROOT_LIB} ${BOOST_LIB} ${UBDAQ_DATATYPES_LIB})
+  target_link_libraries(TriggerDAQApp SWTriggerBase FEMBeamTrigger ${ROOT_LIB} ${BOOST_LIB} ${UBDAQ_DATATYPES_LIB})
   set_directory_properties( PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${DAQ_TRIGGER_ALGO_LIBDIR}/libTriggerDAQApp.rootmap" )
 ELSE()
   add_library(TriggerDAQApp SHARED ${SOURCES} )

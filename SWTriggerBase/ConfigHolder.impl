@@ -1,7 +1,6 @@
-#ifndef CONFIGHOLDER_CXX
-#define CONFIGHOLDER_CXX
+#ifndef CONFIGHOLDER_IMPL
+#define CONFIGHOLDER_IMPL
 
-#include "ConfigHolder.h"
 namespace trigger {
 
   template<> std::map< std::string, bool        >& ConfigHolder::GetContainer() { return _bool_m;  }

@@ -38,6 +38,25 @@ namespace trigger {
     /// Default destructor
     ~ConfigHolder(){}
 
+  private:
+
+    template <class T>
+    std::map<std::string, T>& GetContainer();
+
+    std::string _name;
+
+    std::map< std::string, bool        > _bool_m;
+    std::map< std::string, std::string > _str_m;
+    std::map< std::string, int         > _int_m;
+    std::map< std::string, double      > _float_m;
+
+    std::map< std::string, std::vector<bool>        > _bool_am;
+    std::map< std::string, std::vector<std::string> > _str_am;
+    std::map< std::string, std::vector<int>         > _int_am;
+    std::map< std::string, std::vector<double>      > _float_am;
+
+  public:
+
     const std::string& Name() const { return _name; }
 
     template <class T>
@@ -72,25 +91,18 @@ namespace trigger {
       }
       holder[key] = value;
     }
-    
-  private:
-
-    template <class T>
-    std::map<std::string, T>& GetContainer();
-
-    std::string _name;
-
-    std::map< std::string, bool        > _bool_m;
-    std::map< std::string, std::string > _str_m;
-    std::map< std::string, int         > _int_m;
-    std::map< std::string, double      > _float_m;
-
-    std::map< std::string, std::vector<bool>        > _bool_am;
-    std::map< std::string, std::vector<std::string> > _str_am;
-    std::map< std::string, std::vector<int>         > _int_am;
-    std::map< std::string, std::vector<double>      > _float_am;
-    
+        
   };
+  /*
+  template<> std::map< std::string, bool        >& ConfigHolder::GetContainer() { return _bool_m;  }
+  template<> std::map< std::string, std::string >& ConfigHolder::GetContainer() { return _str_m;   }
+  template<> std::map< std::string, int         >& ConfigHolder::GetContainer() { return _int_m;   }
+  template<> std::map< std::string, double      >& ConfigHolder::GetContainer() { return _float_m; }
+  template<> std::map< std::string, std::vector< bool        > >& ConfigHolder::GetContainer() { return _bool_am;  }
+  template<> std::map< std::string, std::vector< std::string > >& ConfigHolder::GetContainer() { return _str_am;   }
+  template<> std::map< std::string, std::vector< int         > >& ConfigHolder::GetContainer() { return _int_am;   }
+  template<> std::map< std::string, std::vector< double      > >& ConfigHolder::GetContainer() { return _float_am; }
+  */
 
   #ifndef __CINT__
   template<> std::map< std::string, bool        >& ConfigHolder::GetContainer();
