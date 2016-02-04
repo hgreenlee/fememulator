@@ -28,7 +28,7 @@ namespace trigger {
       
       if(debug()) std::cout << " total waveforms: " << wfms.size() << ". nfilled: " << nfilled << std::endl;
       
-      return ::trigger::fememu::FEMBeamTriggerAlgo::Process( chwfms );
+      return ::trigger::fememu::FEMBeamTriggerAlgo::Process(0, chwfms );
     }
     
     const Result LLInterface::Emulate(const ::larlite::event_fifo& wfms )
@@ -50,7 +50,7 @@ namespace trigger {
       
       if(debug()) std::cout << " total waveforms: " << wfms.size() << ". nfilled: " << nfilled << std::endl;
       
-      return ::trigger::fememu::FEMBeamTriggerAlgo::Process( chwfms );
+      return ::trigger::fememu::FEMBeamTriggerAlgo::Process(0, chwfms );
     }
   }
 }

@@ -1,8 +1,7 @@
 from fememu_pycfg import apply_config
 import os,sys
 import ROOT as rt
-rt.gSystem.Load("libFEMBeamTrigger_LArLiteApp.so")
-
+rt.gSystem.Load("libFEMBeamTrigger_LArLiteInterface")
 #
 # Get configuration
 #
@@ -15,8 +14,8 @@ if not apply_config(config,cfg_file):
 #
 # Prepare input TTree with input files
 #
-#product_name = "opdigit_pmtreadout" # for opdetwaveform
-product_name = "fifo_pmt_xmit"      # for fifo
+product_name = "opdigit_pmtreadout" # for opdetwaveform
+#product_name = "fifo_pmt_xmit"      # for fifo
 fin_list = sys.argv[2:len(sys.argv)]
 tree = rt.TChain("%s_tree" % product_name)
 for f in fin_list:
@@ -41,6 +40,8 @@ for entry in xrange(tree.GetEntries()):
         print '\033[93mEntry',entry,'\033[00m'
 
     out = fememu.Emulate(product)
+
+    print out.time
 
     # If this is fifo type, only use module address 4 (platform) or 5 (test-stand) ... (HACK)
     try:

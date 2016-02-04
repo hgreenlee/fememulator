@@ -6,7 +6,7 @@ cmake_minimum_required (VERSION 2.8)
 project (DAQTriggerAlgo)
 
 set(USE_ROOT 0)
-IF(DEFINED ENV{SWTRIGGER_ROOT})
+IF(DEFINED ENV{SWTRIGGER_ROOT6} OR DEFINED ENV{SWTRIGGER_ROOT5})
   set(USE_ROOT 1)
   execute_process(COMMAND root-config --incdir 
 		  OUTPUT_VARIABLE ROOT_INCDIR 
@@ -14,7 +14,7 @@ IF(DEFINED ENV{SWTRIGGER_ROOT})
   execute_process(COMMAND root-config --libs 
 		  OUTPUT_VARIABLE ROOT_LIB 
 		  OUTPUT_STRIP_TRAILING_WHITESPACE)
-  IF(ENV{SWTRIGGER_ROOT} STREQUAL "6")
+  IF(DEFINED ENV{SWTRIGGER_ROOT6})
     set(ROOT6 1)
     message("--${Yellow} Using ROOT6${ColorReset}")
   ELSE()
