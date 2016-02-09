@@ -10,6 +10,6 @@
 #pragma link off all functions;
 
 #pragma link C++ class trigger::fememu::LLInterface+;
-
+#pragma link C++ class larlite::SWTriggerAna+;
 #endif
 
