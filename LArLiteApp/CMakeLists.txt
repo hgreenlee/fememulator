@@ -59,7 +59,7 @@ include_directories(${LARLITE_INC})
 set(CMAKE_CXX_FLAGS "-std=c++11")
 set_target_properties( FEMBeamTrigger_LArLiteInterface
 		       PROPERTIES
-	               LIBRARY_OUTPUT_DIRECTORY ${DAQ_TRIGGER_ALGO_LIBDIR}
+                       LIBRARY_OUTPUT_DIRECTORY ${DAQ_TRIGGER_ALGO_LIBDIR}
 )
 
 if (NOT ${ROOT6})
