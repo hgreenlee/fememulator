@@ -12,3 +12,14 @@ else
     fi
 fi
 
+echo
+echo \$SWTRIGGER_INCDIR=$SWTRIGGER_INCDIR
+echo \$SWTRIGGER_BUILDDIR=$SWTRIGGER_BUILDDIR
+echo \$SWTRIGGER_LIBDIR=$SWTRIGGER_LIBDIR
+echo
+echo To build:
+echo > mkdir build
+echo > cd build
+echo > cmake ..
+echo > make -j
+echo
