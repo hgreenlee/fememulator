@@ -57,6 +57,8 @@ include_directories(${BOOST_INC})
 include_directories(${UBDAQ_DATATYPES_INC})
 
 set(CMAKE_CXX_FLAGS "-std=c++1y")
+set(CMAKE_CXX_FLAGS_DEBUG "-std=c++1y -g -gdwarf-2 -O0")
+set(CMAKE_CXX_FLAGS_PROF "-std=c++1y -g -gdwarf-2 -O3")
 set_target_properties( TriggerDAQApp
 		       PROPERTIES
 	               LIBRARY_OUTPUT_DIRECTORY ${DAQ_TRIGGER_ALGO_LIBDIR}
