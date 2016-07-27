@@ -56,8 +56,8 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${DAQ_TRIGGER_ALGO_INCDIR})
 
 set(CMAKE_CXX_FLAGS "-std=c++11")
-set(CMAKE_CXX_FLAGS_DEBUG "-std=c++11 -g -gdwarf-2 -O0")
-set(CMAKE_CXX_FLAGS_PROF "-std=c++11 -g -gdwarf-2 -O3")
+set(CMAKE_CXX_FLAGS_DEBUG "-g -gdwarf-2 -O0")
+set(CMAKE_CXX_FLAGS_PROF "-g -gdwarf-2 -O3")
 set_target_properties( FEMBeamTrigger
 		       PROPERTIES
 	               LIBRARY_OUTPUT_DIRECTORY ${DAQ_TRIGGER_ALGO_LIBDIR}
