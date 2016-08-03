@@ -1,4 +1,4 @@
-1project (TriggerDAQApp)
+project (TriggerDAQApp)
 
 # Now set CMAKE variables for my use
 set(SHLIB "libTriggerDAQApp.so")
