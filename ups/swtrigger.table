@@ -58,7 +58,7 @@ Qualifiers = "e10:prof"
     fileTest( ${${UPS_PROD_NAME_UC}_FQ_DIR}, -d, "${${UPS_PROD_NAME_UC}_FQ_DIR} directory not found: SETUP ABORTED")
 
   Action = GetProducts
-    setupRequired( root v6_08_04c -q +e10:+nu:+prof )
+    setupRequired( root v6_08_06d -q +e10:+nu:+prof )
 
 Flavor     = ANY
 Qualifiers = "e10:debug"
@@ -72,7 +72,7 @@ Qualifiers = "e10:debug"
     fileTest( ${${UPS_PROD_NAME_UC}_FQ_DIR}, -d, "${${UPS_PROD_NAME_UC}_FQ_DIR} directory not found: SETUP ABORTED")
 
   Action = GetProducts
-    setupRequired( root v6_08_04c -q +e10:+nu:+debug )
+    setupRequired( root v6_08_06d -q +e10:+nu:+debug )
 
 Flavor     = ANY
 Qualifiers = "e10:opt"
@@ -86,7 +86,7 @@ Qualifiers = "e10:opt"
     fileTest( ${${UPS_PROD_NAME_UC}_FQ_DIR}, -d, "${${UPS_PROD_NAME_UC}_FQ_DIR} directory not found: SETUP ABORTED")
 
   Action = GetProducts
-    setupRequired( root v6_08_04c -q +e10:+nu:+opt )
+    setupRequired( root v6_08_06d -q +e10:+nu:+opt )
 
 
 Common:
