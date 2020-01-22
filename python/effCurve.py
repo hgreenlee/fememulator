@@ -25,7 +25,7 @@ SWLower = []
 k=TEfficiency()
 k.SetStatisticOption(TEfficiency.kFFC)
 
-for x in xrange(len(YES)):
+for x in range(len(YES)):
     
     yes  = YES[x]
     tot  = TOT[x]
@@ -39,7 +39,7 @@ for x in xrange(len(YES)):
     SWLower.append(eff_mean - eff_lower)
 
 
-    print 'iteration %i'%x
+    print('iteration %i'%x)
 
 plt.errorbar(Thresh,SW,yerr=[SWUpper,SWLower],fmt='o-',color='b',markersize=7,label='Software Trig. Offline Analysis')
 plt.grid()

@@ -29,27 +29,27 @@ f_trig = ROOT.TFile('debug_trig.root')
 f_xmit = ROOT.TFile('debug_fifo.root')
 t_trig = f_trig.Get('trigger_daq_tree')
 t_xmit = f_xmit.Get('fifo_pmt_xmit_tree')
-print 'trigger entries :',t_trig.GetEntries()
-print 'xmit entries    :',t_xmit.GetEntries()
-print emu._cfg.fVerbosity
-print emu._cfg.fSetTriggerWindow
-print emu._cfg.fDiscr0delay
-print emu._cfg.fDiscr3delay
-print emu._cfg.fDiscr0threshold
-print emu._cfg.fDiscr3threshold
-print emu._cfg.fDiscr0precount
-print emu._cfg.fDiscr0deadtime
-print emu._cfg.fDiscr3deadtime
-print emu._cfg.fDiscr0width
-print emu._cfg.fDiscr3width
-print emu._cfg.fTriggerWinStartTick
-print emu._cfg.fMinReadoutTicks
-print emu._cfg.fFrontBuffer
-print emu._cfg.fWindowSize
-print emu._cfg.fTriggerThresMult
-print emu._cfg.fTriggerThresPHMAX
+print('trigger entries :',t_trig.GetEntries())
+print('xmit entries    :',t_xmit.GetEntries())
+print(emu._cfg.fVerbosity)
+print(emu._cfg.fSetTriggerWindow)
+print(emu._cfg.fDiscr0delay)
+print(emu._cfg.fDiscr3delay)
+print(emu._cfg.fDiscr0threshold)
+print(emu._cfg.fDiscr3threshold)
+print(emu._cfg.fDiscr0precount)
+print(emu._cfg.fDiscr0deadtime)
+print(emu._cfg.fDiscr3deadtime)
+print(emu._cfg.fDiscr0width)
+print(emu._cfg.fDiscr3width)
+print(emu._cfg.fTriggerWinStartTick)
+print(emu._cfg.fMinReadoutTicks)
+print(emu._cfg.fFrontBuffer)
+print(emu._cfg.fWindowSize)
+print(emu._cfg.fTriggerThresMult)
+print(emu._cfg.fTriggerThresPHMAX)
 
-for x in xrange(t_xmit.GetEntries()):
+for x in range(t_xmit.GetEntries()):
     t_xmit.GetEntry(x)
     t_trig.GetEntry(x)
 
@@ -57,7 +57,7 @@ for x in xrange(t_xmit.GetEntries()):
     ev_fifo = t_xmit.fifo_pmt_xmit_branch
 
     ch0,beamch=(None,None)
-    for n in xrange(ev_fifo.size()):
+    for n in range(ev_fifo.size()):
         fifo = ev_fifo[n]
         if not fifo.module_address() == 5: continue
         channel = fifo.channel_number()
@@ -71,12 +71,12 @@ for x in xrange(t_xmit.GetEntries()):
     beam_tick = beamch.readout_sample_number_RAW() - beamgate_sample
 
     emu_out = emu.Emulate(ev_fifo)
-    print 'Trigger @ %d, Emulator fire @' % trig_tick,
+    print('Trigger @ %d, Emulator fire @' % trig_tick, end=' ')
     emu_fired = False
     for t in emu_out.fire_time_v:
-        print t,
+        print(t, end=' ')
         if t >= 0: emu_fired = True
-    print
+    print()
 
     '''
     ev_fifo = t_xmit.fifo_pmt_xmit_branch

@@ -8,7 +8,7 @@ rt.gSystem.Load("libFEMBeamTrigger_LArLiteInterface")
 cfg_file = sys.argv[1]
 config = rt.trigger.fememu.FEMBeamTriggerConfig()
 if not apply_config(config,cfg_file):
-    print '\033[91m[ERROR]\033[00m exiting...'
+    print('\033[91m[ERROR]\033[00m exiting...')
     sys.exit(1)
 
 #
@@ -31,7 +31,7 @@ from larlite import larlite as fmwk
 my_proc = fmwk.ana_processor()
 
 # Set input root file
-for x in xrange(len(sys.argv)-2):
+for x in range(len(sys.argv)-2):
     my_proc.add_input_file(sys.argv[x+2])
 
 # Specify IO mode
@@ -46,9 +46,9 @@ my_unit = fmwk.SWTriggerAna()
 my_unit.SetAlgo(fememu)
 my_proc.add_process(my_unit)
 
-print
-print  "Finished configuring ana_processor. Start event loop!"
-print
+print()
+print("Finished configuring ana_processor. Start event loop!")
+print()
 
 # Let's run it.
 my_proc.run();

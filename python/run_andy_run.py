@@ -11,8 +11,8 @@ trigger.fememu
 k=trigger.DAQFileInterface()
 k.Reset()
 
-for x in xrange(len(sys.argv)-1):
-    print 'Input:',sys.argv[x+1]
+for x in range(len(sys.argv)-1):
+    print('Input:',sys.argv[x+1])
     k.AddInputFile(sys.argv[x+1])
 k.SetTarget(5,0,32,700)
 k.Initialize()
@@ -70,6 +70,6 @@ algos.Configure()
 while k.ProcessEvent():
     wf_v=k.WaveformArray()
     out = algos.Process(wf_v)
-    print 'Run',k.run(),'SubRun',k.subrun(),'Event',k.event(),'Trigger time:',out.time#,'Process time',algos.AverageProcessTime()
+    print('Run',k.run(),'SubRun',k.subrun(),'Event',k.event(),'Trigger time:',out.time)#,'Process time',algos.AverageProcessTime()
 
     

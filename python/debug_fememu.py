@@ -9,7 +9,7 @@ rt.gSystem.Load("libFEMBeamTrigger_LArLiteApp.so")
 cfg_file = sys.argv[1]
 config = rt.trigger.fememu.FEMBeamTriggerConfig()
 if not apply_config(config,cfg_file):
-    print '\033[91m[ERROR]\033[00m exiting...'
+    print('\033[91m[ERROR]\033[00m exiting...')
     sys.exit(1)
 
 #
@@ -31,14 +31,14 @@ fememu = rt.trigger.fememu.LLInterface(config)
 # Loop over TTree entries
 #
 product = None
-for entry in xrange(tree.GetEntries()):
+for entry in range(tree.GetEntries()):
 
     tree.GetEntry(entry)
     
     exec('product = tree.%s_branch' % product_name)
 
     if config.fVerbosity <= rt.trigger.fememu.kINFO:
-        print '\033[93mEntry',entry,'\033[00m'
+        print('\033[93mEntry',entry,'\033[00m')
 
     out = fememu.Emulate(product)
 

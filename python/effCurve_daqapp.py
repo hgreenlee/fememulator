@@ -9,7 +9,7 @@ from ROOT import trigger
 cfg_file = sys.argv[1]
 config = trigger.fememu.FEMBeamTriggerConfig()
 if not apply_config(config,cfg_file):
-    print '\033[91m[ERROR]\033[00m exiting...'
+    print('\033[91m[ERROR]\033[00m exiting...')
     sys.exit(1)
 
 # test over a series of PE values
@@ -21,7 +21,7 @@ fout = open('results.txt','w')
 for pe in PEs:
 
     adcthresh = int(pe*20)
-    print 'ADC threshold for this run is ',adcthresh
+    print('ADC threshold for this run is ',adcthresh)
 
     config.fTriggerThresPHMAX=adcthresh
 
@@ -33,8 +33,8 @@ for pe in PEs:
     k=trigger.DAQFileInterface()
     k.Reset()
     
-    for x in xrange(len(sys.argv)-2):
-        print 'Input:',sys.argv[x+2]
+    for x in range(len(sys.argv)-2):
+        print('Input:',sys.argv[x+2])
         k.AddInputFile(sys.argv[x+2])
     k.SetTarget(5,0,32,700)
     k.Initialize()
@@ -48,7 +48,7 @@ for pe in PEs:
         total += 1
         if (out.time >= 0):
             passed += 1
-        print 'Run',k.run(),'SubRun',k.subrun(),'Event',k.event(),'Trigger time:',out.time,'Process time',fememu.AverageProcessTime()
+        print('Run',k.run(),'SubRun',k.subrun(),'Event',k.event(),'Trigger time:',out.time,'Process time',fememu.AverageProcessTime())
 
 
     fout.write('%f %i %i\n'%(pe,passed,total))
